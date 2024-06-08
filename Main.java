@@ -22,7 +22,6 @@ public class Main {
         Epic epic1 = new Epic("The next summer vacation","to organize the next summer vacation");
         Subtask subtask0OfEpic1 = new Subtask("A place to go","to choose a place to go");
 
-
         manager.addEpicObj(epic0);
         manager.addSubtaskObj(subtask0OfEpic0);
         manager.addSubtaskObj(subtask1OfEpic0);
