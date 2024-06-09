@@ -1,6 +1,6 @@
-package main.Kanban.tasks;
+package main.kanban1.java.src.tasks;
 
-import main.Kanban.status.Status;
+import main.kanban1.java.src.status.Status;
 
 import java.util.Objects;
 

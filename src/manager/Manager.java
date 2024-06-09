@@ -1,9 +1,9 @@
-package main.Kanban.manager;
+package main.kanban1.java.src.manager;
 
-import main.Kanban.tasks.Epic;
-import main.Kanban.status.Status;
-import main.Kanban.tasks.Subtask;
-import main.Kanban.tasks.Task;
+import main.kanban1.java.src.tasks.Epic;
+import main.kanban1.java.src.status.Status;
+import main.kanban1.java.src.tasks.Subtask;
+import main.kanban1.java.src.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;

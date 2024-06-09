@@ -1,9 +1,9 @@
-package main.Kanban;
+package main.kanban1.java.src;
 
-import main.Kanban.manager.Manager;
-import main.Kanban.tasks.Epic;
-import main.Kanban.tasks.Subtask;
-import main.Kanban.tasks.Task;
+import main.kanban1.java.src.manager.Manager;
+import main.kanban1.java.src.tasks.Epic;
+import main.kanban1.java.src.tasks.Subtask;
+import main.kanban1.java.src.tasks.Task;
 
 public class Main {
     public static void main(String[] args) {

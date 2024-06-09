@@ -1,6 +1,6 @@
-package main.Kanban.tasks;
+package main.kanban1.java.src.tasks;
 
-import main.Kanban.tasks.Task;
+import main.kanban1.java.src.tasks.Task;
 
 public class Subtask extends Task {
     private int epicId;
