@@ -8,7 +8,7 @@ import main.Kanban.tasks.Task;
 public class Main {
     public static void main(String[] args) {
         Manager manager = new Manager();
-
+// test
         Task task0 = new Task("Flat's cleaning","to clean the whole flat");
         Task task1 = new Task("Garage's cleaning","to clean the whole garage");
         Task task2 = new Task("Food buying","to buy the food for next three days");
