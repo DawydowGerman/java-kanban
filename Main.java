@@ -1,5 +1,10 @@
 package main.Kanban;
 
+import main.Kanban.manager.Manager;
+import main.Kanban.tasks.Epic;
+import main.Kanban.tasks.Subtask;
+import main.Kanban.tasks.Task;
+
 public class Main {
     public static void main(String[] args) {
         Manager manager = new Manager();
@@ -11,8 +16,6 @@ public class Main {
         manager.addTaskObj(task0);
         manager.addTaskObj(task1);
         manager.addTaskObj(task2);
-
-        manager.printAllTasks();
 
         Epic epic0 = new Epic("A new bank card","to open a new bank card");
         Subtask subtask0OfEpic0 = new Subtask("Find bank office","to find the nearest bank's office");
@@ -28,8 +31,5 @@ public class Main {
         manager.addSubtaskObj(subtask2OfEpic0);
         manager.addEpicObj(epic1);
         manager.addSubtaskObj(subtask0OfEpic1);
-
-        manager.printAllEpics();
-        manager.printAllSubtasks();
     }
 }

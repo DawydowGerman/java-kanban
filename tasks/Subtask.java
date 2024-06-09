@@ -1,4 +1,6 @@
-package main.Kanban;
+package main.Kanban.tasks;
+
+import main.Kanban.tasks.Task;
 
 public class Subtask extends Task {
     private int epicId;

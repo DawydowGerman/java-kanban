@@ -1,4 +1,6 @@
-package main.Kanban;
+package main.Kanban.tasks;
+
+import main.Kanban.status.Status;
 
 import java.util.Objects;
 

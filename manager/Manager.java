@@ -1,36 +1,29 @@
-package main.Kanban;
+package main.Kanban.manager;
+
+import main.Kanban.tasks.Epic;
+import main.Kanban.status.Status;
+import main.Kanban.tasks.Subtask;
+import main.Kanban.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Manager {
-    static int idCounter = 1;
-    HashMap<Integer, Task> tasksList = new HashMap<>();
-    HashMap<Integer, Subtask> subtasksList = new HashMap<>();
-    HashMap<Integer, Epic> epicsList = new HashMap<>();
+    private static int idCounter = 1;
+    private HashMap<Integer, Task> tasksList = new HashMap<>();
+    private HashMap<Integer, Subtask> subtasksList = new HashMap<>();
+    private HashMap<Integer, Epic> epicsList = new HashMap<>();
 
-    public ArrayList<Task> getAllTasks() {
-        ArrayList<Task> listOfTasks = new ArrayList<>();
-        for (Task task : tasksList.values()) {
-            listOfTasks.add(task);
-        }
-        return listOfTasks;
+    public ArrayList<Task> getTasks() {
+        return new ArrayList<>(tasksList.values());
     }
 
     public ArrayList<Subtask> getSubtasks() {
-        ArrayList<Subtask> listOfSubtasks = new ArrayList<>();
-        for (Subtask subtask : subtasksList.values()) {
-            listOfSubtasks.add(subtask);
-        }
-        return listOfSubtasks;
+        return new ArrayList<>(subtasksList.values());
     }
 
     public ArrayList<Epic> getEpics() {
-        ArrayList<Epic> listOfEpics = new ArrayList<>();
-        for (Epic epic : epicsList.values()) {
-            listOfEpics.add(epic);
-        }
-        return listOfEpics;
+        return new ArrayList<>(epicsList.values());
     }
 
     public void deleteAllTasks() {
@@ -39,11 +32,15 @@ public class Manager {
     }
 
     public void deleteAllSubtasks() {
+        for (Epic epic : epicsList.values()) {
+            this.updateEpicStatus(epic);
+            epic.cleanSubtaskIds();
+        }
         subtasksList.clear();
-        System.out.println("Все подзадачи удалены.");
     }
 
     public void deleteAllEpics() {
+        subtasksList.clear();
         epicsList.clear();
         System.out.println("Все эпики удалены.");
     }
@@ -105,48 +102,6 @@ public class Manager {
         epicsList.remove(id);
     }
 
-    public void printAllTasks() {
-        if (tasksList.isEmpty()) {
-            System.out.println("Список задач пуст");
-            return;
-        }
-        for (Task task : tasksList.values()) {
-            System.out.println("Название задачи " + task.getName());
-            System.out.println("Описание задачи " + task.getDescription());
-            System.out.println("Номер задачи " + task.getIdNum());
-            System.out.println("Статус выполнения задачи " + task.getStatus());
-            System.out.println();
-        }
-    }
-
-    public void printAllSubtasks() {
-        if (subtasksList.isEmpty()) {
-            System.out.println("Список подзадач пуст");
-            return;
-        }
-        for (Subtask subtask : subtasksList.values()) {
-            System.out.println("Название задачи " + subtask.getName());
-            System.out.println("Описание задачи " + subtask.getDescription());
-            System.out.println("Номер задачи " + subtask.getIdNum());
-            System.out.println("Статус выполнения задачи " + subtask.getStatus());
-            System.out.println();
-        }
-    }
-
-    public void printAllEpics() {
-        if (epicsList.isEmpty()) {
-            System.out.println("Список подзадач пуст");
-            return;
-        }
-        for (Epic epic : epicsList.values()) {
-            System.out.println("Название задачи " + epic.getName());
-            System.out.println("Описание задачи " + epic.getDescription());
-            System.out.println("Номер задачи " + epic.getIdNum());
-            System.out.println("Статус выполнения задачи " + epic.getStatus());
-            System.out.println();
-        }
-    }
-
     public ArrayList<Subtask> getAllSubtasksOfOneEpic(Epic epic) {
         ArrayList<Integer> subtasksIds = epic.getSubtasksId();
         ArrayList<Subtask> listOfSubtasksOneEpic = new ArrayList<>();
@@ -156,7 +111,7 @@ public class Manager {
         return listOfSubtasksOneEpic;
     }
 
-    public void manageEpicStatus (Epic epic) {
+    public void updateEpicStatus (Epic epic) {
         ArrayList<Integer> subtasksIds = epic.getSubtasksId();
         ArrayList<Subtask> listOfSubtasksOneEpic = this.getAllSubtasksOfOneEpic(epic);
         boolean allSubtasksNEW = false;

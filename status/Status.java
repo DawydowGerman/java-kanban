@@ -1,4 +1,4 @@
-package main.Kanban;
+package main.Kanban.status;
 
 public enum Status {
     NEW,

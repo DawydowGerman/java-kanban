@@ -1,4 +1,6 @@
-package main.Kanban;
+package main.Kanban.tasks;
+
+import main.Kanban.tasks.Task;
 
 import java.util.ArrayList;
 
@@ -15,5 +17,9 @@ public class Epic extends Task {
 
      public ArrayList<Integer> getSubtasksId() {
          return subtasksIds;
+    }
+
+    public void cleanSubtaskIds () {
+        subtasksIds.clear();
     }
 }
