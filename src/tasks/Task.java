@@ -10,6 +10,9 @@ public class Task {
     private int idNum;
     private Status status = Status.NEW;
 
+    public Task() {
+    }
+
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
