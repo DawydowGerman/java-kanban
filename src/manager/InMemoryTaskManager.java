@@ -8,6 +8,7 @@ import main.kanban1.java.src.tasks.Subtask;
 import main.kanban1.java.src.tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int idCounter = 1;
@@ -54,12 +55,12 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllEpics() {
         subtasksList.clear();
         epicsList.clear();
-        System.out.println("Все эпики удалены.");
     }
 
     @Override
     public Task getTaskById(Integer integer) {
         Task task = tasksList.get(integer);
+        if (task == null) return null;
         InMemoryHistoryManagerObj.add(task);
         return task;
     }
@@ -67,6 +68,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtaskById(Integer integer) {
         Subtask subtask = subtasksList.get(integer);
+        if (subtask == null) return null;
         InMemoryHistoryManagerObj.add(subtask);
         return subtask;
     }
@@ -74,6 +76,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpicById(Integer integer) {
         Epic epic = epicsList.get(integer);
+        if (epic == null) return null;
         InMemoryHistoryManagerObj.add(epic);
         return epic;
     }
@@ -121,11 +124,22 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubtaskById(Integer id) {
+        Subtask subtask = subtasksList.get(id);
+        if (subtask == null) return;
+        int epicId = subtask.getEpicId();
+        Epic epic = epicsList.get(epicId);
+        epic.deleteSubtaskId(id);
+        this.updateEpicStatus(epic);
         subtasksList.remove(id);
     }
 
     @Override
     public void deleteEpicById(Integer id) {
+        Epic epic = epicsList.get(id);
+        ArrayList<Integer> listOfSubtasksIds = epic.getSubtasksId();
+        for(Integer a : listOfSubtasksIds) {
+            subtasksList.remove(a);
+        }
         epicsList.remove(id);
     }
 

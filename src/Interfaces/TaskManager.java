@@ -7,6 +7,7 @@ import main.kanban1.java.src.tasks.Task;
 import java.util.*;
 
 public interface TaskManager {
+
     ArrayList<Task> getTasks();
 
     ArrayList<Subtask> getSubtasks();

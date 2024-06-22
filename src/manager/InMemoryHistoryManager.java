@@ -12,7 +12,7 @@ import main.kanban1.java.src.tasks.Subtask;
 import main.kanban1.java.src.tasks.Task;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private static List<Task> watchHistory = new ArrayList<>();
+    private List<Task> watchHistory = new ArrayList<>();
 
     @Override
     public void add(Task task) {
@@ -24,6 +24,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        return watchHistory;
+        List<Task> copyOfWatchHistory = new ArrayList<>(watchHistory);
+        return copyOfWatchHistory;
     }
 }
