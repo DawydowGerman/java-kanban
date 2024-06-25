@@ -17,7 +17,7 @@ class TaskTest {
     @BeforeEach
     public void beforeEach() {
         task = new Task("task","to do something");
-        task0 = new Task("task","to do something");
+        task0 = new Task("task","to do something other");
     }
 
     @Test
