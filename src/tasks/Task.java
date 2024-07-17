@@ -18,23 +18,23 @@ public class Task {
         this.description = description;
     }
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
-    public String getDescription () {
+    public String getDescription() {
         return description;
     }
 
-    public int getIdNum () {
+    public int getIdNum() {
         return idNum;
     }
 
-    public Status getStatus () {
+    public Status getStatus() {
         return status;
     }
 
-    public void setName (String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
