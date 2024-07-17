@@ -1,5 +1,6 @@
 package manager;
 
+import main.kanban1.java.src.Interfaces.HistoryManager;
 import main.kanban1.java.src.Interfaces.TaskManager;
 import main.kanban1.java.src.status.Status;
 import main.kanban1.java.src.tasks.Epic;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +26,7 @@ class InMemoryTaskManagerTest {
     Epic epic0;
     Managers managers;
     TaskManager taskManager;
+    HistoryManager historyManager;
 
     @BeforeEach
     public void beforeEach() {
@@ -39,6 +42,7 @@ class InMemoryTaskManagerTest {
 
         managers = new Managers();
         taskManager = managers.getDefault();
+        historyManager = managers.getDefaultHistory();
     }
 
     @Test
@@ -179,10 +183,32 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    void deleteTaskByIdMethodRemovesFromHistoryTest() {
+        taskManager.addTaskObj(task);
+        taskManager.getTaskById(1);
+        taskManager.deleteTaskById(1);
+        List<Task> list = historyManager.getHistory();
+        Assertions.assertEquals(list.size(), 0);
+    }
+
+    @Test
     void deleteSubtaskByIdMethodTest() {
+        taskManager.addEpicObj(epic);
         taskManager.addSubtaskObj(subtask);
+        subtask.setEpicId(epic.getIdNum());
+        taskManager.deleteSubtaskById(subtask.getIdNum());
+        Assertions.assertEquals(taskManager.getSubtaskById(2), null);
+    }
+
+    @Test
+    void deleteSubtaskByIdMethodRemovesFromHistoryTest() {
+        taskManager.addEpicObj(epic);
+        taskManager.addSubtaskObj(subtask);
+        subtask.setEpicId(epic.getIdNum());
+        taskManager.getSubtaskById(2);
         taskManager.deleteSubtaskById(1);
-        Assertions.assertEquals(taskManager.getSubtaskById(1), null);
+        List<Task> list = historyManager.getHistory();
+        Assertions.assertEquals(list.size(), 0);
     }
 
     @Test
@@ -190,6 +216,17 @@ class InMemoryTaskManagerTest {
         taskManager.addEpicObj(epic);
         taskManager.deleteEpicById(1);
         Assertions.assertEquals(taskManager.getEpicById(1), null);
+    }
+
+    @Test
+    void deleteEpicByIdMethodRemovesFromHistoryTest() {
+        taskManager.addEpicObj(epic);
+        taskManager.addSubtaskObj(subtask);
+        epic.linkSubtaskToEpic(subtask.getIdNum());
+        taskManager.getEpicById(epic.getIdNum());
+        taskManager.deleteEpicById(1);
+        List<Task> list = historyManager.getHistory();
+        Assertions.assertEquals(list.size(), 0);
     }
 
     @Test
