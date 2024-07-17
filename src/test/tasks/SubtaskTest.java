@@ -14,7 +14,7 @@ class SubtaskTest {
     }
 
     @Test
-    void shouldSubtasksBeEqualWhenSameId () {
+    void shouldSubtasksBeEqualWhenSameId() {
         Subtask subtask0 = new Subtask();
         subtask0.setIdNum(1);
 
