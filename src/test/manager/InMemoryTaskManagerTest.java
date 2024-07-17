@@ -6,7 +6,7 @@ import main.kanban1.java.src.status.Status;
 import main.kanban1.java.src.tasks.Epic;
 import main.kanban1.java.src.tasks.Subtask;
 import main.kanban1.java.src.tasks.Task;
-import main.kanban1.java.src.utilclass.Managers;
+import main.kanban1.java.src.util.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
