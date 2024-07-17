@@ -3,7 +3,7 @@ package utilClass;
 import main.kanban1.java.src.Interfaces.HistoryManager;
 import main.kanban1.java.src.Interfaces.TaskManager;
 import main.kanban1.java.src.tasks.Task;
-import main.kanban1.java.src.utilClass.Managers;
+import main.kanban1.java.src.utilclass.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

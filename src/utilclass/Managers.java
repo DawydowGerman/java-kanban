@@ -1,4 +1,4 @@
-package main.kanban1.java.src.utilClass;
+package main.kanban1.java.src.utilclass;
 
 import main.kanban1.java.src.Interfaces.HistoryManager;
 import main.kanban1.java.src.manager.InMemoryHistoryManager;
