@@ -1,7 +1,5 @@
 package main.kanban1.java.src.tasks;
 
-import main.kanban1.java.src.tasks.Task;
-
 public class Subtask extends Task {
     private int epicId;
 
@@ -17,7 +15,7 @@ public class Subtask extends Task {
     }
 
     public void setEpicId(int epicId) {
-        if(this.getIdNum() == epicId) return;
+        if (this.getIdNum() == epicId) return;
         this.epicId = epicId;
     }
 }
