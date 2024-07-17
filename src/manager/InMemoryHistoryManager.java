@@ -9,8 +9,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     private List<Task> watchHistory = new ArrayList<>();
     public Map<Integer, Node> mapHistory = new HashMap<>();
 
-    private Node<Task> head = null;
-    private Node<Task> tail = null;
+    private Node head = null;
+    private Node tail = null;
 
     public void linkLast(Task task) {
     if (task == null) return;
@@ -73,11 +73,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         return copyOfWatchHistory;
     }
 
-    public Node<Task> getTail() {
+    public Node getTail() {
         return this.tail;
     }
 
-    public Node<Task> getHead() {
+    public Node getHead() {
         return this.head;
     }
 }
