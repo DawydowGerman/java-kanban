@@ -1,4 +1,4 @@
-package utilClass;
+package util;
 
 import main.kanban1.java.src.Interfaces.HistoryManager;
 import main.kanban1.java.src.Interfaces.TaskManager;
