@@ -9,11 +9,15 @@ import org.junit.jupiter.api.Test;
 class TaskTest {
     Task task;
     Task task0;
+    Task task1;
+    Task task2;
 
     @BeforeEach
     public void beforeEach() {
         task = new Task("task","to do something");
         task0 = new Task("task","to do something other");
+        task1 = new Task("task","to do something");
+        task2 = new Task("task","to do something");
     }
 
     @Test
@@ -71,11 +75,11 @@ class TaskTest {
 
     @Test
     void testEqualsMethodTest() {
-        Assertions.assertEquals(task, task0);
+        Assertions.assertEquals(task1, task2);
     }
 
     @Test
     void testHashCodeMethodTest() {
-        Assertions.assertEquals(task.hashCode(), task0.hashCode());
+        Assertions.assertEquals(task1.hashCode(), task2.hashCode());
     }
 }

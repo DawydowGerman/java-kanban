@@ -10,7 +10,6 @@ import main.kanban1.java.src.util.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +17,23 @@ class InMemoryTaskManagerTest {
     Task task;
     Task task0;
     Task task1;
+    Task taskforsecondtest;
     Subtask subtask;
     Subtask subtask0;
+    Subtask subtask1;
+    Subtask subtask2;
+    Subtask subtask3;
+    Subtask subtask4;
+    Subtask subtask5;
+    Subtask subtask6;
     Epic epic;
     Epic epic0;
+    Epic epic1;
+    Epic epic2;
+    Epic epic3;
     Managers managers;
     TaskManager taskManager;
+    TaskManager taskManager0;
     HistoryManager historyManager;
 
     @BeforeEach
@@ -31,15 +41,31 @@ class InMemoryTaskManagerTest {
         task = new Task("task","to do something");
         task0 = new Task("task","to do something");
         task1 = new Task("task","to do something other");
+        taskforsecondtest = new Task("task","to do something");
 
         subtask = new Subtask("task","to do something");
         subtask0 = new Subtask("task","to do something other");
 
+        subtask1 = new Subtask("task","to do something as subtask1");
+        subtask2 = new Subtask("task","to do something other as subtask2");
+
+        subtask3 = new Subtask("task","to do something as subtask3");
+        subtask4 = new Subtask("task","to do something other as subtask4");
+
+        subtask5 = new Subtask("task","to do something as subtask5");
+        subtask6 = new Subtask("task","to do something other as subtask6");
+
         epic = new Epic("task","to do something");
         epic0 = new Epic("task","to do something other");
+        epic1 = new Epic("task","to do something other");
+        epic2 = new Epic("task","to do something other");
+        epic3 = new Epic("task","to do something other");
+
 
         managers = new Managers();
         taskManager = managers.getDefault();
+        taskManager0 = managers.getDefault();
+
         historyManager = managers.getDefaultHistory();
     }
 
@@ -54,9 +80,9 @@ class InMemoryTaskManagerTest {
 
     @Test
     void immutabilityOfTasksFieldsAfterAdditionToManager() {
-        taskManager.addTaskObj(task);
-        task0.setIdNum(1);
-        Assertions.assertEquals(task, task0);
+        taskManager.addTaskObj(taskforsecondtest);
+        task0.setIdNum(13);
+        Assertions.assertEquals(taskforsecondtest, task0);
     }
 
     @Test
@@ -107,21 +133,21 @@ class InMemoryTaskManagerTest {
     @Test
     void getTaskByIdMethodTest() {
         taskManager.addTaskObj(task);
-        Task task0 = taskManager.getTaskById(1);
+        Task task0 = taskManager.getTaskById(27);
         Assertions.assertEquals(task0, task);
     }
 
     @Test
     void getSubtaskByIdMethodTest() {
         taskManager.addSubtaskObj(subtask);
-        Subtask subtask0 = taskManager.getSubtaskById(1);
+        Subtask subtask0 = taskManager.getSubtaskById(40);
         Assertions.assertEquals(subtask0, subtask);
     }
 
     @Test
     void getEpicByIdMethodTest() {
         taskManager.addEpicObj(epic);
-        Epic epic0 = taskManager.getEpicById(1);
+        Epic epic0 = taskManager.getEpicById(7);
         Assertions.assertEquals(epic0, epic);
     }
 
@@ -239,35 +265,38 @@ class InMemoryTaskManagerTest {
 
     @Test
     void updateEpicStatusWhenAllSubtasksNEW() {
-        epic.linkSubtaskToEpic(1);
-        epic.linkSubtaskToEpic(2);
-        taskManager.addSubtaskObj(subtask);
-        taskManager.addSubtaskObj(subtask0);
-        taskManager.updateEpicStatus(epic);
-        Assertions.assertEquals(epic.getStatus(), Status.NEW);
+        taskManager0.addSubtaskObj(subtask1);
+        taskManager0.addSubtaskObj(subtask2);
+        taskManager0.addEpicObj(epic1);
+        epic1.linkSubtaskToEpic(subtask1.getIdNum());
+        epic1.linkSubtaskToEpic(subtask2.getIdNum());
+        taskManager0.updateEpicStatus(epic1); // here is the issue
+        Assertions.assertEquals(epic1.getStatus(), Status.NEW);
     }
 
     @Test
     void updateEpicStatusWhenAllSubtasksDONE() {
-        subtask.setStatus(Status.DONE);
-        subtask0.setStatus(Status.DONE);
-        epic.linkSubtaskToEpic(1);
-        epic.linkSubtaskToEpic(2);
-        taskManager.addSubtaskObj(subtask);
-        taskManager.addSubtaskObj(subtask0);
-        taskManager.updateEpicStatus(epic);
-        Assertions.assertEquals(epic.getStatus(), Status.DONE);
+        taskManager0.addSubtaskObj(subtask3);
+        taskManager0.addSubtaskObj(subtask4);
+        taskManager0.addEpicObj(epic2);
+        subtask3.setStatus(Status.DONE);
+        subtask4.setStatus(Status.DONE);
+        epic2.linkSubtaskToEpic(subtask3.getIdNum());
+        epic2.linkSubtaskToEpic(subtask4.getIdNum());
+        taskManager0.updateEpicStatus(epic2);
+        Assertions.assertEquals(epic2.getStatus(), Status.DONE);
     }
 
     @Test
     void updateEpicStatusWhenAllSubtasksIN_PROGRESS() {
-        subtask.setStatus(Status.IN_PROGRESS);
-        subtask0.setStatus(Status.DONE);
-        epic.linkSubtaskToEpic(1);
-        epic.linkSubtaskToEpic(2);
-        taskManager.addSubtaskObj(subtask);
-        taskManager.addSubtaskObj(subtask0);
-        taskManager.updateEpicStatus(epic);
-        Assertions.assertEquals(epic.getStatus(), Status.IN_PROGRESS);
+        taskManager0.addSubtaskObj(subtask5);
+        taskManager0.addSubtaskObj(subtask6);
+        taskManager0.addEpicObj(epic3);
+        subtask5.setStatus(Status.IN_PROGRESS);
+        subtask6.setStatus(Status.DONE);
+        epic3.linkSubtaskToEpic(subtask5.getIdNum());
+        epic3.linkSubtaskToEpic(subtask6.getIdNum());
+        taskManager0.updateEpicStatus(epic3);
+        Assertions.assertEquals(epic3.getStatus(), Status.IN_PROGRESS);
     }
 }

@@ -8,7 +8,6 @@ import main.kanban1.java.src.tasks.Subtask;
 import main.kanban1.java.src.tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
-// import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int idCounter = 1;
@@ -165,7 +164,7 @@ public class InMemoryTaskManager implements TaskManager {
         boolean allSubtasksDONE = false;
 
         for (Subtask subtask : listOfSubtasksOneEpic) {
-           if (subtask.getStatus() == Status.NEW) {
+           if (subtask.getStatus() == Status.NEW) {  // here is the issue
                allSubtasksNEW = true;
            } else {
                allSubtasksNEW = false;

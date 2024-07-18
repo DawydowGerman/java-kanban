@@ -11,7 +11,6 @@ import main.kanban1.java.src.util.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 class InMemoryHistoryManagerTest {

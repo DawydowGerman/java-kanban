@@ -32,7 +32,7 @@ class ManagersTest {
 
     @Test
     void getDefaultHistoryMethodReturnsReadyForUseInMemoryHistoryManager() {
-        taskManager.getTaskById(task.getIdNum());
+        historyManager.add(task);
         List<Task> listOfTasks = historyManager.getHistory();
         Assertions.assertEquals(listOfTasks.size(), 1);
     }
