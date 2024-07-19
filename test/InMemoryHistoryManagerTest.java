@@ -4,7 +4,6 @@ import main.kanban1.java.src.Interfaces.HistoryManager;
 import main.kanban1.java.src.Interfaces.TaskManager;
 import main.kanban1.java.src.manager.InMemoryHistoryManager;
 import main.kanban1.java.src.tasks.Epic;
-import main.kanban1.java.src.tasks.Node;
 import main.kanban1.java.src.tasks.Subtask;
 import main.kanban1.java.src.tasks.Task;
 import main.kanban1.java.src.util.Managers;
@@ -58,17 +57,6 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void linkLastMethodTest() {
-        task.setIdNum(1);
-        task0.setIdNum(2);
-        subtask.setIdNum(3);
-        historyManagerClassVar.linkLast(task);
-        historyManagerClassVar.linkLast(task0);
-        historyManagerClassVar.linkLast(subtask);
-        Assertions.assertEquals(historyManagerClassVar.mapHistory.size(),3);
-    }
-
-    @Test
     void getTasksMethodTest() {
         task.setIdNum(1);
         task0.setIdNum(2);
@@ -78,36 +66,6 @@ class InMemoryHistoryManagerTest {
         historyManagerClassVar.linkLast(subtask);
         List<Task> tasksList = historyManagerClassVar.getTasks();
         Assertions.assertEquals(tasksList.size(),3);
-    }
-
-    @Test
-    void removeNodeMethodTest() {
-        task.setIdNum(1);
-        task0.setIdNum(2);
-        subtask.setIdNum(3);
-        epic.setIdNum(4);
-        historyManagerClassVar.linkLast(task);
-        historyManagerClassVar.linkLast(task0);
-        historyManagerClassVar.linkLast(subtask);
-        historyManagerClassVar.linkLast(epic);
-        Node deletedNode = historyManagerClassVar.mapHistory.get(3);
-        historyManagerClassVar.removeNode(deletedNode);
-        Assertions.assertEquals(historyManagerClassVar.mapHistory.get(3),null);
-    }
-
-    @Test
-    void removeNodeMethodChangeLinksCorrectly() {
-        task.setIdNum(1);
-        task0.setIdNum(2);
-        subtask.setIdNum(3);
-        epic.setIdNum(4);
-        historyManagerClassVar.linkLast(task);
-        historyManagerClassVar.linkLast(task0);
-        historyManagerClassVar.linkLast(subtask);
-        historyManagerClassVar.linkLast(epic);
-        Node deletedNode = historyManagerClassVar.mapHistory.get(4);
-        historyManagerClassVar.removeNode(deletedNode);
-        Assertions.assertEquals(historyManagerClassVar.getTail(), historyManagerClassVar.mapHistory.get(3));
     }
 
     @Test

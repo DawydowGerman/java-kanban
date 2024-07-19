@@ -6,8 +6,7 @@ import main.kanban1.java.src.tasks.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private List<Task> watchHistory = new ArrayList<>();
-    public Map<Integer, Node> mapHistory = new HashMap<>();
+    private Map<Integer, Node> mapHistory = new HashMap<>();
 
     private Node head = null;
     private Node tail = null;
@@ -64,20 +63,11 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(int id) {
         removeNode(mapHistory.get(id));
-        watchHistory = getHistory();
     }
 
     @Override
     public List<Task> getHistory() {
         List<Task> copyOfWatchHistory = getTasks();
         return copyOfWatchHistory;
-    }
-
-    public Node getTail() {
-        return this.tail;
-    }
-
-    public Node getHead() {
-        return this.head;
     }
 }
