@@ -1,7 +1,5 @@
 package main.kanban1.java.src.tasks;
 
-import main.kanban1.java.src.tasks.Task;
-import java.util.List;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -24,7 +22,7 @@ public class Epic extends Task {
     }
 
     public void deleteSubtaskId(Integer subtaskId) {
-        for(int i = 0; i < subtasksIds.size(); i++) {
+        for (int i = 0; i < subtasksIds.size(); i++) {
             if (subtaskId == subtasksIds.get(i)) {
                 subtasksIds.remove(i);
             }

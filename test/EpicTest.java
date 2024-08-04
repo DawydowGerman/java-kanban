@@ -1,14 +1,11 @@
-package tasks;
+package main.kanban1.java.test;
 
 import main.kanban1.java.src.tasks.Epic;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class EpicTest {
     Epic epic;

@@ -8,17 +8,16 @@ import main.kanban1.java.src.tasks.Subtask;
 import main.kanban1.java.src.tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int idCounter = 1;
     private HashMap<Integer, Task> tasksList = new HashMap<>();
     private HashMap<Integer, Subtask> subtasksList = new HashMap<>();
     private HashMap<Integer, Epic> epicsList = new HashMap<>();
-    private HistoryManager InMemoryHistoryManagerObj;
+    private HistoryManager inMemoryHistoryManagerObj;
 
     public InMemoryTaskManager(HistoryManager iMHMobj) {
-        this.InMemoryHistoryManagerObj = iMHMobj;
+        this.inMemoryHistoryManagerObj = iMHMobj;
     }
 
     @Override
@@ -61,7 +60,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(Integer integer) {
         Task task = tasksList.get(integer);
         if (task == null) return null;
-        InMemoryHistoryManagerObj.add(task);
+        inMemoryHistoryManagerObj.add(task);
         return task;
     }
 
@@ -69,7 +68,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(Integer integer) {
         Subtask subtask = subtasksList.get(integer);
         if (subtask == null) return null;
-        InMemoryHistoryManagerObj.add(subtask);
+        inMemoryHistoryManagerObj.add(subtask);
         return subtask;
     }
 
@@ -77,7 +76,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(Integer integer) {
         Epic epic = epicsList.get(integer);
         if (epic == null) return null;
-        InMemoryHistoryManagerObj.add(epic);
+        inMemoryHistoryManagerObj.add(epic);
         return epic;
     }
 
@@ -120,6 +119,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(Integer id) {
         tasksList.remove(id);
+        inMemoryHistoryManagerObj.remove(id);
     }
 
     @Override
@@ -131,16 +131,19 @@ public class InMemoryTaskManager implements TaskManager {
         epic.deleteSubtaskId(id);
         this.updateEpicStatus(epic);
         subtasksList.remove(id);
+        inMemoryHistoryManagerObj.remove(id);
     }
 
     @Override
     public void deleteEpicById(Integer id) {
         Epic epic = epicsList.get(id);
+        if (epic == null) return;
         ArrayList<Integer> listOfSubtasksIds = epic.getSubtasksId();
-        for(Integer a : listOfSubtasksIds) {
+        for (Integer a : listOfSubtasksIds) {
             subtasksList.remove(a);
         }
         epicsList.remove(id);
+        inMemoryHistoryManagerObj.remove(id);
     }
 
     @Override
@@ -160,8 +163,8 @@ public class InMemoryTaskManager implements TaskManager {
         boolean allSubtasksNEW = false;
         boolean allSubtasksDONE = false;
 
-        for(Subtask subtask : listOfSubtasksOneEpic) {
-           if(subtask.getStatus() == Status.NEW) {
+        for (Subtask subtask : listOfSubtasksOneEpic) {
+           if (subtask.getStatus() == Status.NEW) {  // here is the issue
                allSubtasksNEW = true;
            } else {
                allSubtasksNEW = false;
@@ -169,8 +172,8 @@ public class InMemoryTaskManager implements TaskManager {
            }
         }
 
-        for(Subtask subtask : listOfSubtasksOneEpic) {
-            if(subtask.getStatus() == Status.DONE) {
+        for (Subtask subtask : listOfSubtasksOneEpic) {
+            if (subtask.getStatus() == Status.DONE) {
                 allSubtasksDONE = true;
             } else {
                 allSubtasksDONE = false;

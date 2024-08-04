@@ -1,11 +1,9 @@
-package tasks;
+package main.kanban1.java.test;
 
 import main.kanban1.java.src.tasks.Subtask;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskTest {
     Subtask subtask;
@@ -16,7 +14,7 @@ class SubtaskTest {
     }
 
     @Test
-    void shouldSubtasksBeEqualWhenSameId () {
+    void shouldSubtasksBeEqualWhenSameId() {
         Subtask subtask0 = new Subtask();
         subtask0.setIdNum(1);
 
