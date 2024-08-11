@@ -22,7 +22,7 @@ public class FileBackedTaskManagerTest {
     @BeforeEach
     public void beforeEach() {
         try {
-            file = File.createTempFile("tmp", ".txt", new File("/home/german/"));
+            file = File.createTempFile("tmp", ".txt");
             System.out.println("File path: " + file.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,14 +36,14 @@ public class FileBackedTaskManagerTest {
         task0 = new Task("Task1", "Description of the task1");
         task1 = new Task("Task2", "Description of the task2");
 
-        // file.deleteOnExit();
+        file.deleteOnExit();
     }
 
     // Problem test
     @Test
     void saveEmptyFileTest() {
         fileBackedTaskManager.save();
-        ArrayList<Task> taskList = taskManager.getTasks();
+        ArrayList<Task> taskList = fileBackedTaskManager.getTasks();
         Assertions.assertEquals(taskList.size(), 0);
     }
 
