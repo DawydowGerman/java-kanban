@@ -16,7 +16,6 @@ public class FileBackedTaskManagerTest {
     Task task0;
     Task task1;
     FileBackedTaskManager fileBackedTaskManager;
-    FileBackedTaskManager fileBackedTaskManager2;
     Managers managers;
     TaskManager taskManager;
 
@@ -37,15 +36,14 @@ public class FileBackedTaskManagerTest {
         task0 = new Task("Task1", "Description of the task1");
         task1 = new Task("Task2", "Description of the task2");
 
-    //    file.deleteOnExit();
+        file.deleteOnExit();
     }
 
     // Problem test
     @Test
     void saveEmptyFileTest() {
-        fileBackedTaskManager2 = new FileBackedTaskManager(file);
-        fileBackedTaskManager2.save();
-        ArrayList<Task> taskList = fileBackedTaskManager2.getTasks();
+        fileBackedTaskManager.save();
+        ArrayList<Task> taskList = taskManager.getTasks();
         Assertions.assertEquals(taskList.size(), 0);
     }
 
