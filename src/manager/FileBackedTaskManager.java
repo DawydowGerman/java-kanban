@@ -25,17 +25,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             fileWriter.write("id,type,name,status,description,epic\n");
 
             ArrayList<Task> taskList = super.getTasks();
-            for(Task task : taskList) {
+            for (Task task : taskList) {
                 fileWriter.write(toString(task) + "\n");
             }
 
             ArrayList<Subtask> subtaskList = super.getSubtasks();
-            for(Subtask subtask : subtaskList) {
+            for (Subtask subtask : subtaskList) {
                 fileWriter.write(toString(subtask) + "\n");
             }
 
             ArrayList<Epic> epicsList = super.getEpics();
-            for(Epic epic : epicsList) {
+            for (Epic epic : epicsList) {
                 fileWriter.write(toString(epic) + "\n");
             }
         } catch (IOException e) {
@@ -119,10 +119,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static FileBackedTaskManager loadFromFile(File file) {
         if (file == null) return null;
 
-        try(Reader fileReader = new FileReader(file)) {
+        try (Reader fileReader = new FileReader(file)) {
             BufferedReader br = new BufferedReader(fileReader);
 
-        while(br.ready()) {
+        while (br.ready()) {
             String line = br.readLine();
 
             int firstComma = line.indexOf(",");
