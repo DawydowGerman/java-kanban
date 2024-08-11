@@ -36,7 +36,7 @@ public class FileBackedTaskManagerTest {
         task0 = new Task("Task1", "Description of the task1");
         task1 = new Task("Task2", "Description of the task2");
 
-        file.deleteOnExit();
+        // file.deleteOnExit();
     }
 
     // Problem test
