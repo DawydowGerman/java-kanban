@@ -16,6 +16,7 @@ public class FileBackedTaskManagerTest {
     Task task0;
     Task task1;
     FileBackedTaskManager fileBackedTaskManager;
+    FileBackedTaskManager fileBackedTaskManager2;
     Managers managers;
     TaskManager taskManager;
 
@@ -28,6 +29,7 @@ public class FileBackedTaskManagerTest {
             e.printStackTrace();
         }
         fileBackedTaskManager = new FileBackedTaskManager(file);
+        fileBackedTaskManager2 = new FileBackedTaskManager(file);
         managers = new Managers();
         taskManager = managers.getDefault();
 
@@ -39,8 +41,8 @@ public class FileBackedTaskManagerTest {
 
     @Test
     void saveEmptyFileTest() {
-        fileBackedTaskManager.save();
-        ArrayList<Task> taskList = fileBackedTaskManager.getTasks();
+        fileBackedTaskManager2.save();
+        ArrayList<Task> taskList = fileBackedTaskManager2.getTasks();
         Assertions.assertEquals(taskList.size(), 0);
     }
 
