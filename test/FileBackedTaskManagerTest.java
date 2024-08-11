@@ -28,19 +28,22 @@ public class FileBackedTaskManagerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         fileBackedTaskManager = new FileBackedTaskManager(file);
-        fileBackedTaskManager2 = new FileBackedTaskManager(file);
+
         managers = new Managers();
         taskManager = managers.getDefault();
 
         task0 = new Task("Task1", "Description of the task1");
         task1 = new Task("Task2", "Description of the task2");
 
-   //     file.deleteOnExit();
+    //    file.deleteOnExit();
     }
 
+    // Problem test
     @Test
     void saveEmptyFileTest() {
+        fileBackedTaskManager2 = new FileBackedTaskManager(file);
         fileBackedTaskManager2.save();
         ArrayList<Task> taskList = fileBackedTaskManager2.getTasks();
         Assertions.assertEquals(taskList.size(), 0);
@@ -53,6 +56,7 @@ public class FileBackedTaskManagerTest {
         Assertions.assertEquals(taskList.size(), 0);
     }
 
+    // Problem test
     @Test
     void saveFewTasks() {
         fileBackedTaskManager.addTaskObj(task0);
@@ -61,6 +65,7 @@ public class FileBackedTaskManagerTest {
         Assertions.assertEquals(taskList.size(), 2);
     }
 
+    // Problem test
     @Test
     void loadFewTasks() {
         fileBackedTaskManager.addTaskObj(task0);
