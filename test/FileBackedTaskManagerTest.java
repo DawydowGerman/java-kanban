@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.ArrayList;
 
-
 public class FileBackedTaskManagerTest {
     File file;
     Task task0;
@@ -35,7 +34,7 @@ public class FileBackedTaskManagerTest {
         task0 = new Task("Task1", "Description of the task1");
         task1 = new Task("Task2", "Description of the task2");
 
-        file.deleteOnExit();
+   //     file.deleteOnExit();
     }
 
     @Test
