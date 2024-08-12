@@ -7,6 +7,7 @@ import main.kanban1.java.src.tasks.Task;
 import main.kanban1.java.src.util.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ public class FileBackedTaskManagerTest {
         file.deleteOnExit();
     }
 
-    // Problem test
     @Test
     void saveEmptyFileTest() {
         fileBackedTaskManager.save();
@@ -54,7 +54,6 @@ public class FileBackedTaskManagerTest {
         Assertions.assertEquals(taskList.size(), 0);
     }
 
-    // Problem test
     @Test
     void saveFewTasks() {
         fileBackedTaskManager.addTaskObj(task0);
@@ -63,7 +62,6 @@ public class FileBackedTaskManagerTest {
         Assertions.assertEquals(taskList.size(), 2);
     }
 
-    // Problem test
     @Test
     void loadFewTasks() {
         fileBackedTaskManager.addTaskObj(task0);

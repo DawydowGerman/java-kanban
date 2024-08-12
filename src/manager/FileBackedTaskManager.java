@@ -39,7 +39,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 fileWriter.write(toString(epic) + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
             throw new ManagerSaveException();
         }
     }
@@ -150,7 +149,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException();
         }
         return new FileBackedTaskManager(file);
     }
