@@ -61,7 +61,6 @@ class InMemoryTaskManagerTest {
         epic2 = new Epic("task","to do something other");
         epic3 = new Epic("task","to do something other");
 
-
         managers = new Managers();
         taskManager = managers.getDefault();
         taskManager0 = managers.getDefault();

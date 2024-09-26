@@ -1,7 +1,6 @@
 package main.kanban1.java.src.tasks;
 
 import main.kanban1.java.src.status.Status;
-
 import java.util.Objects;
 
 public class Task {

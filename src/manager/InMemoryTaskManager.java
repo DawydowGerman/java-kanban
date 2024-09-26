@@ -16,6 +16,9 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Epic> epicsList = new HashMap<>();
     private HistoryManager inMemoryHistoryManagerObj;
 
+    public InMemoryTaskManager() {
+    }
+
     public InMemoryTaskManager(HistoryManager iMHMobj) {
         this.inMemoryHistoryManagerObj = iMHMobj;
     }
