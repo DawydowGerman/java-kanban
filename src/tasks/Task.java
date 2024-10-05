@@ -68,15 +68,15 @@ public class Task {
         this.status = status;
     }
 
-    public void setDuration (int durationLength) {
+    public void setDuration(int durationLength) {
         this.duration = Duration.ofMinutes(durationLength);
     }
 
-    public void setStartTime (int year, int month, int day, int hour, int minute) {
+    public void setStartTime(int year, int month, int day, int hour, int minute) {
         this.startTime = LocalDateTime.of(year, month, day, hour, minute);
     }
 
-    public void setStartTime (LocalDateTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 

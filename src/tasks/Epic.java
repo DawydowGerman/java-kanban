@@ -45,7 +45,7 @@ public class Epic extends Task {
         this.duration = subsDurList.stream().reduce(Duration.ZERO, (t, d) -> t = t.plus(d));
     }
 
-    public void setDurationDirectly (int durationLength) {
+    public void setDurationDirectly(int durationLength) {
         this.duration = Duration.ofMinutes(durationLength);
     }
 
@@ -67,7 +67,7 @@ public class Epic extends Task {
         }
     }
 
-    public void setStartTimeDirectly (LocalDateTime startTime) {
+    public void setStartTimeDirectly(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -91,7 +91,7 @@ public class Epic extends Task {
         return endTime;
     }
 
-    public void setEndTimeDirectly (LocalDateTime endTime) {
+    public void setEndTimeDirectly(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 }

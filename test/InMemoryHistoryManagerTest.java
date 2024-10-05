@@ -159,5 +159,4 @@ class InMemoryHistoryManagerTest {
         Task task = list.get(2);
         Assertions.assertEquals(task, task1);
     }
-
 }
