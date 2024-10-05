@@ -240,7 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
         ArrayList<Integer> subtasksIds = epic.getSubtasksId();
         ArrayList<Subtask> listOfSubtasksOneEpic = this.getAllSubtasksOfOneEpic(epic);
         listOfSubtasksOneEpic.stream()
-            .forEach (i -> {
+            .forEach(i -> {
                 if (i.getStatus() == Status.NEW) {
                     setAllSubtasksNEWTrue();
                 } else {
@@ -252,7 +252,7 @@ public class InMemoryTaskManager implements TaskManager {
             allSubtasksNEW = false;
         }
         listOfSubtasksOneEpic.stream()
-                .forEach (i -> {
+                .forEach(i -> {
                     if (i.getStatus() == Status.DONE) {
                         setAllSubtasksDONETrue();
                     } else {
@@ -287,7 +287,7 @@ public class InMemoryTaskManager implements TaskManager {
         boolean result = false;
         if ((task0.getStartTime().isBefore(task1.getEndTime()) ||
             task0.getStartTime().equals(task1.getEndTime())) &&
-            ( task0.getEndTime().isAfter(task1.getStartTime()) ||
+            (task0.getEndTime().isAfter(task1.getStartTime()) ||
             task0.getEndTime().equals(task1.getStartTime()))) {
             result = true;
             intersectionsValidator = true;
