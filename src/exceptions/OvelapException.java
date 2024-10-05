@@ -1,7 +1,5 @@
 package main.kanban1.java.src.exceptions;
 
-import java.io.IOException;
-
 public class OvelapException extends RuntimeException {
     public OvelapException() {
     }
