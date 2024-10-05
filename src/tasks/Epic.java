@@ -57,8 +57,8 @@ public class Epic extends Task {
     public void setStartTime() {
         ArrayList<Integer> listOfSubtasksIds = this.getSubtasksId();
         for (int i = 0; i < listOfSubtasksIds.size() - 1; i++) {
-            Subtask subtask = subtasksListOfThisEpic.get( listOfSubtasksIds.get(i) );
-            Subtask nextSubtask = subtasksListOfThisEpic.get( listOfSubtasksIds.get(i + 1) );
+            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i));
+            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i + 1));
             if (subtask.getStartTime().isBefore(nextSubtask.getStartTime())) {
                 this.startTime = subtask.getStartTime();
             } else {
@@ -80,8 +80,8 @@ public class Epic extends Task {
     public LocalDateTime getEndTime() {
         ArrayList<Integer> listOfSubtasksIds = this.getSubtasksId();
         for (int i = 0; i < listOfSubtasksIds.size() - 1; i++) {
-            Subtask subtask = subtasksListOfThisEpic.get( listOfSubtasksIds.get(i) );
-            Subtask nextSubtask = subtasksListOfThisEpic.get( listOfSubtasksIds.get(i + 1) );
+            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i));
+            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i + 1));
             if (subtask.getEndTime().isAfter(nextSubtask.getEndTime())) {
                 this.endTime = subtask.getEndTime();
             } else {
