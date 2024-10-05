@@ -34,18 +34,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             ArrayList<Task> taskList = super.getTasks();
             taskList.stream()
-            .map(p -> toString(p)+"\n") // Stream<String>
+            .map(p -> toString(p) + "\n") // Stream<String>
                     .forEach(s -> {
                         try {
                             fileWriter.write(s);
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             // internally catched
                         }
                     });
 
             ArrayList<Subtask> subtaskList = super.getSubtasks();
             subtaskList.stream()
-                    .map(p -> toString(p)+"\n") // Stream<String>
+                    .map(p -> toString(p) + "\n") // Stream<String>
                     .forEach(s -> {
                         try {
                             fileWriter.write(s);
@@ -56,7 +56,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             ArrayList<Epic> epicsList = super.getEpics();
             epicsList.stream()
-                    .map(p -> toString(p)+"\n") // Stream<String>
+                    .map(p -> toString(p) + "\n") // Stream<String>
                     .forEach(s -> {
                         try {
                             fileWriter.write(s);
@@ -141,7 +141,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String endTimeStr;
         LocalDateTime endTime;
 
-        if(taskType.equals("SUBTASK")) {
+        if (taskType.equals("SUBTASK")) {
             epicIdStr = value.substring(value.indexOf(",", fifthComma) + 1,
                     value.indexOf(",", sixthComma));
             epicId = Integer.parseInt(epicIdStr);
@@ -215,25 +215,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         list.stream()
             .skip(1)
-            .forEach (i -> {
+            .forEach(i -> {
                 if (i.substring(i.indexOf(",",i.indexOf(",")) + 1,
-                    i.indexOf(",",i.indexOf(",",i.indexOf(",") + 1))).equals("TASK"))
-                {
+                    i.indexOf(",",i.indexOf(",",i.indexOf(",") + 1))).equals("TASK")) {
                     Task task = fromString(i);
                     taskManager.addTaskObj(task);
                 } else if (i.substring(i.indexOf(",",i.indexOf(",")) + 1,
-                     i.indexOf(",",i.indexOf(",",i.indexOf(",") + 1))).equals("SUBTASK"))
-                {
+                     i.indexOf(",",i.indexOf(",",i.indexOf(",") + 1))).equals("SUBTASK")) {
                     Subtask subtask = (Subtask) fromString(i);
                     taskManager.addSubtaskObj(subtask);
-
                 } else if (i.substring(i.indexOf(",",i.indexOf(",")) + 1,
-                    i.indexOf(",",i.indexOf(",",i.indexOf(",") + 1))).equals("EPIC"))
-                {
+                    i.indexOf(",",i.indexOf(",",i.indexOf(",") + 1))).equals("EPIC")) {
                     Epic epic = (Epic) fromString(i);
                     taskManager.addEpicObj(epic);
-                }
-            });
+                }});
         return new FileBackedTaskManager(file);
     }
 
