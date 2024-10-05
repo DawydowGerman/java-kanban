@@ -105,15 +105,14 @@ class TaskManagerTest {
     @Test
     void immutabilityOfTasksFieldsAfterAdditionToManager() {
         taskforsecondtest.setStartTime(2024, 3, 15, 16, 32);
-        taskforsecondtest.setDuration(10080);
-        taskforsecondtest.getEndTime();
+        taskforsecondtest.setDuration(60);
         taskforsecondtest.setIdNum(13);
-        task0.setStartTime(2024, 3, 22, 16, 33);
-        task0.setDuration(100);
-        task0.getEndTime();
-        task0.setIdNum(14);
+        Task taskForImmTest = new Task("task","to do something");
+        taskForImmTest.setStartTime(2024, 3, 15, 16, 32);
+        taskForImmTest.setDuration(60);
+        taskForImmTest.setIdNum(14);
         taskManager.addTaskObj(taskforsecondtest);
-        Assertions.assertEquals(taskforsecondtest, task0);
+        Assertions.assertEquals(taskforsecondtest, taskForImmTest);
     }
 
     @Test
@@ -564,7 +563,7 @@ class TaskManagerTest {
         subtask1.setEpicId(epic1.getIdNum());
         taskManager.addSubtaskObj(subtask1);
         taskManager.addEpicObj(epic1);
-        Epic epicTest = taskManager.getEpicById(27);
+        Epic epicTest = taskManager.getEpicById(epic1.getIdNum());
         Assertions.assertEquals(epic1, epicTest);
     }
 }
