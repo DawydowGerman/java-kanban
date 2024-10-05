@@ -228,7 +228,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     i.indexOf(",",i.indexOf(",",i.indexOf(",") + 1))).equals("EPIC")) {
                     Epic epic = (Epic) fromString(i);
                     taskManager.addEpicObj(epic);
-                }});
+                }
+            });
         return new FileBackedTaskManager(file);
     }
 
