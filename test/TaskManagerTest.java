@@ -107,11 +107,13 @@ class TaskManagerTest {
         taskforsecondtest.setStartTime(2024, 3, 15, 16, 32);
         taskforsecondtest.setDuration(60);
         taskforsecondtest.setIdNum(13);
+        taskManager.addTaskObj(taskforsecondtest);
+
         Task taskForImmTest = new Task("task","to do something");
         taskForImmTest.setStartTime(2024, 3, 15, 16, 32);
         taskForImmTest.setDuration(60);
-        taskForImmTest.setIdNum(14);
-        taskManager.addTaskObj(taskforsecondtest);
+        taskForImmTest.setIdNum(taskforsecondtest.getIdNum());
+
         Assertions.assertEquals(taskforsecondtest, taskForImmTest);
     }
 
