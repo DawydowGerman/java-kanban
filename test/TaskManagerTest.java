@@ -108,12 +108,10 @@ class TaskManagerTest {
         taskforsecondtest.setDuration(60);
         taskforsecondtest.setIdNum(13);
         taskManager.addTaskObj(taskforsecondtest);
-
         Task taskForImmTest = new Task("task","to do something");
         taskForImmTest.setStartTime(2024, 3, 15, 16, 32);
         taskForImmTest.setDuration(60);
         taskForImmTest.setIdNum(taskforsecondtest.getIdNum());
-
         Assertions.assertEquals(taskforsecondtest, taskForImmTest);
     }
 
@@ -132,7 +130,6 @@ class TaskManagerTest {
         subtask.setStartTime(2024, 3, 15, 16, 32);
         subtask.setDuration(10080);
         subtask.getEndTime();
-
         taskManager.addSubtaskObj(subtask);
         ArrayList<Subtask> list = taskManager.getSubtasks();
         Assertions.assertEquals(list.size(), 1);
@@ -211,7 +208,6 @@ class TaskManagerTest {
         task.setStartTime(2024, 3, 15, 16, 32);
         task.setDuration(10080);
         task.getEndTime();
-
         task0.setStartTime(2024, 3, 22, 16, 32);
         task0.setDuration(10);
         task0.getEndTime();
@@ -230,7 +226,6 @@ class TaskManagerTest {
         subtask.setStartTime(2024, 3, 15, 16, 32);
         subtask.setDuration(10080);
         subtask.getEndTime();
-
         taskManager.addSubtaskObj(subtask);
         ArrayList<Subtask> list = taskManager.getSubtasks();
         Assertions.assertEquals(list.size(), 1);
@@ -315,6 +310,9 @@ class TaskManagerTest {
 
     @Test
     void deleteEpicByIdMethodRemovesFromHistoryTest() {
+        subtask.setStartTime(2022,3,15,12,35);
+        subtask.setDuration(60);
+        subtask.getEndTime();
         taskManager.addEpicObj(epic);
         taskManager.addSubtaskObj(subtask);
         epic.linkSubtaskToEpic(subtask);
@@ -328,7 +326,13 @@ class TaskManagerTest {
     void getAllSubtasksOfOneEpicMethodTest() {
         epic1.setIdNum(12);
         subtask1.setIdNum(3);
+        subtask1.setStartTime(2022,3,15,12,35);
+        subtask1.setDuration(60);
+        subtask1.getEndTime();
         subtask2.setIdNum(5);
+        subtask2.setStartTime(2024,3,15,12,35);
+        subtask2.setDuration(60);
+        subtask2.getEndTime();
         epic1.linkSubtaskToEpic(subtask1);
         epic1.linkSubtaskToEpic(subtask2);
         taskManager.addSubtaskObj(subtask1);
@@ -561,6 +565,10 @@ class TaskManagerTest {
     void epicExistenceForSubtask() {
         epic1.setIdNum(12);
         subtask1.setIdNum(3);
+        subtask1.setStartTime(2022,3,15,12,35);
+        subtask1.setDuration(60);
+        subtask1.getEndTime();
+
         epic1.linkSubtaskToEpic(subtask1);
         subtask1.setEpicId(epic1.getIdNum());
         taskManager.addSubtaskObj(subtask1);

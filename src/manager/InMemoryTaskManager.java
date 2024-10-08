@@ -10,7 +10,6 @@ import main.kanban1.java.src.util.TasksComparator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -25,7 +24,6 @@ public class InMemoryTaskManager implements TaskManager {
     private boolean allSubtasksDONE = false;
     private boolean someSubtasksNotNEW = false;
     private boolean someSubtasksNotDONE = false;
-
 
     public InMemoryTaskManager() {
     }
@@ -51,14 +49,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
+        treeSet.removeAll(getTasks());
         tasksList.clear();
         System.out.println("Все задачи удалены.");
     }
 
     @Override
     public void deleteAllSubtasks() {
+        treeSet.removeAll(getSubtasks());
         epicsList.values()
-            .stream()
             .forEach(i -> {
                 updateEpicStatus(i);
                 i.cleanSubtaskIds();
@@ -68,6 +67,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
+        treeSet.removeAll(getSubtasks());
+        treeSet.removeAll(getEpics());
         subtasksList.clear();
         epicsList.clear();
     }
@@ -100,8 +101,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void addTaskObj(Task task) {
         if (task.getStartTime() != null && task.getDuration() != null) {
             ArrayList<Task> taskList = this.getTasks();
-            taskList.stream()
-                    .forEach(i -> {
+            taskList.forEach(i -> {
                                 if (checkIntersections(task, i)) {
                                     throw new OvelapException("Добавляемая задача пересекается с другой");
                                 }
@@ -120,8 +120,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void addSubtaskObj(Subtask subtask) {
         if (subtask.getStartTime() != null && subtask.getDuration() != null) {
             ArrayList<Subtask> subsList = this.getSubtasks();
-            subsList.stream()
-                    .forEach(i -> {
+            subsList.forEach(i -> {
                         try {
                             if (checkIntersections(subtask, i)) {
                                 throw new OvelapException("Добавляемая задача пересекается с другой");
@@ -151,8 +150,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updTask(Task task) {
         if (task.getStartTime() != null && task.getDuration() != null) {
             ArrayList<Task> taskList = this.getTasks();
-            taskList.stream()
-                    .forEach(i -> {
+            taskList.forEach(i -> {
                         try {
                             if (checkIntersections(task, i)) {
                                 throw new OvelapException("Добавляемая задача пересекается с другой");
@@ -173,8 +171,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updSubtask(Subtask subtask) {
         if (subtask.getStartTime() != null && subtask.getDuration() != null) {
             ArrayList<Subtask> subsList = this.getSubtasks();
-            subsList.stream()
-                    .forEach(i -> {
+            subsList.forEach(i -> {
                         try {
                             if (checkIntersections(subtask, i)) {
                                 throw new OvelapException("Добавляемая задача пересекается с другой");
@@ -198,6 +195,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskById(Integer id) {
+        Task task = tasksList.get(id);
+        if (task == null) return;
+        treeSet.remove(task);
         tasksList.remove(id);
         inMemoryHistoryManagerObj.remove(id);
     }
@@ -210,6 +210,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicsList.get(epicId);
         epic.deleteSubtaskId(id);
         this.updateEpicStatus(epic);
+        treeSet.remove(subtask);
         subtasksList.remove(id);
         inMemoryHistoryManagerObj.remove(id);
     }
@@ -219,9 +220,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epicsList.get(id);
         if (epic == null) return;
         ArrayList<Integer> listOfSubtasksIds = epic.getSubtasksId();
-        listOfSubtasksIds.stream()
-                .forEach(i -> subtasksList.remove(i)
-                );
+        listOfSubtasksIds.forEach(i -> subtasksList.remove(i));
         epicsList.remove(id);
         inMemoryHistoryManagerObj.remove(id);
     }
@@ -230,8 +229,7 @@ public class InMemoryTaskManager implements TaskManager {
     public ArrayList<Subtask> getAllSubtasksOfOneEpic(Epic epic) {
         ArrayList<Integer> subtasksIds = epic.getSubtasksId();
         ArrayList<Subtask> listOfSubtasksOneEpic = new ArrayList<>();
-        subtasksIds.stream()
-            .forEach(i -> listOfSubtasksOneEpic.add(subtasksList.get(i)));
+        subtasksIds.forEach(i -> listOfSubtasksOneEpic.add(subtasksList.get(i)));
         return listOfSubtasksOneEpic;
     }
 
@@ -239,8 +237,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpicStatus(Epic epic) {
         ArrayList<Integer> subtasksIds = epic.getSubtasksId();
         ArrayList<Subtask> listOfSubtasksOneEpic = this.getAllSubtasksOfOneEpic(epic);
-        listOfSubtasksOneEpic.stream()
-            .forEach(i -> {
+        listOfSubtasksOneEpic.forEach(i -> {
                 if (i.getStatus() == Status.NEW) {
                     setAllSubtasksNEWTrue();
                 } else {
@@ -251,8 +248,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (someSubtasksNotNEW) {
             allSubtasksNEW = false;
         }
-        listOfSubtasksOneEpic.stream()
-                .forEach(i -> {
+        listOfSubtasksOneEpic.forEach(i -> {
                     if (i.getStatus() == Status.DONE) {
                         setAllSubtasksDONETrue();
                     } else {
@@ -277,9 +273,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Task> getPrioritizedTasks() {
-        Iterator<Task> itr = treeSet.iterator();
-        ArrayList<Task> listOfTasksInTreeSet = new ArrayList<>(treeSet);
-        return listOfTasksInTreeSet;
+        return new ArrayList<>(treeSet);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package main.kanban1.java.src.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private int epicId;
 
@@ -8,6 +11,10 @@ public class Subtask extends Task {
 
     public Subtask(String name, String description) {
         super(name, description);
+    }
+
+    public Subtask(int durationLength,int year, int month, int day, int hour, int minute) {
+        super(durationLength, year, month, day, hour, minute);
     }
 
     public int getEpicId() {

@@ -11,7 +11,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node head = null;
     private Node tail = null;
 
-    @Override
     public void linkLast(Task task) {
     if (task == null) return;
     Node node = new Node(task);
@@ -27,16 +26,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    @Override
     public List<Task> getTasks() {
         List<Task> tasksList = new ArrayList<>();
         mapHistory.values()
-            .stream()
             .forEach(i -> tasksList.add(i.getTask()));
         return tasksList;
     }
 
-    @Override
     public void removeNode(Node node) {
         if (node == null) return;
         if (node == head) {
@@ -49,7 +45,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             node.next.prev = node.prev;
         }
-        Task task = (Task) node.getTask();
+        Task task = node.getTask();
         int taskId = task.getIdNum();
         mapHistory.remove(taskId);
     }
@@ -69,7 +65,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        List<Task> copyOfWatchHistory = getTasks();
-        return copyOfWatchHistory;
+        return getTasks();
     }
 }

@@ -11,10 +11,4 @@ public interface HistoryManager {
     void remove(int id);
 
     List<Task> getHistory();
-
-    void linkLast(Task task);
-
-    List<Task> getTasks();
-
-    void removeNode(Node node);
 }

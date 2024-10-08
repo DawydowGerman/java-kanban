@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 
 public class Epic extends Task {
     private HashMap<Integer, Subtask> subtasksListOfThisEpic = new HashMap<>();
-    private Duration duration = Duration.ofMinutes(0);
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
 
     public Epic() {
     }
@@ -20,10 +17,15 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(int durationLength,int year, int month, int day, int hour, int minute) {
+        super(durationLength, year, month, day, hour, minute);
+    }
+
     public void linkSubtaskToEpic(Subtask subtask) {
         if (subtask == null) return;
         if (this.getIdNum() == subtask.getIdNum()) return;
         subtasksListOfThisEpic.put(subtask.getIdNum(), subtask);
+        setDurationStartTimeEndTime();
     }
 
     public ArrayList<Integer> getSubtasksId() {
@@ -33,65 +35,71 @@ public class Epic extends Task {
 
     public void deleteSubtaskId(Integer subtaskId) {
         subtasksListOfThisEpic.remove(subtaskId);
+        setDurationStartTimeEndTime();
     }
 
     public void cleanSubtaskIds() {
         subtasksListOfThisEpic.clear();
+        setDurationStartTimeEndTime();
     }
 
-    public void setDuration() {
+    public void setDurationStartTimeEndTime() {
         List<Subtask> subsList = new ArrayList<Subtask>(subtasksListOfThisEpic.values());
         List<Duration> subsDurList = subsList.stream().map(Subtask::getDuration).collect(Collectors.toList());
-        this.duration = subsDurList.stream().reduce(Duration.ZERO, (t, d) -> t = t.plus(d));
+        Duration duration = subsDurList.stream().reduce(Duration.ZERO, (t, d) -> t = t.plus(d));
+        super.setDuration((int) duration.toMinutes());
+
+        ArrayList<Integer> listOfSubtasksIds0 = this.getSubtasksId();
+        LocalDateTime startTime = null;
+        for (int i = 0; i < listOfSubtasksIds0.size() - 1; i++) {
+            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds0.get(i));
+            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds0.get(i + 1));
+            if (subtask.getStartTime().isBefore(nextSubtask.getStartTime())) {
+                startTime = subtask.getStartTime();
+            } else {
+                startTime = nextSubtask.getStartTime();
+            }
+        }
+        setStartTimeDirectly(startTime);
+
+        ArrayList<Integer> listOfSubtasksIds1 = this.getSubtasksId();
+        LocalDateTime endTime = null;
+        for (int i = 0; i < listOfSubtasksIds1.size() - 1; i++) {
+            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds1.get(i));
+            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds1.get(i + 1));
+            if (subtask.getEndTime().isAfter(nextSubtask.getEndTime())) {
+                endTime = subtask.getEndTime();
+            } else {
+                endTime = nextSubtask.getEndTime();
+            }
+        }
+        setEndTimeDirectly(endTime);
     }
 
     public void setDurationDirectly(int durationLength) {
-        this.duration = Duration.ofMinutes(durationLength);
+        super.setDuration(durationLength);
     }
 
     @Override
     public Duration getDuration() {
-        return this.duration;
-    }
-
-    public void setStartTime() {
-        ArrayList<Integer> listOfSubtasksIds = this.getSubtasksId();
-        for (int i = 0; i < listOfSubtasksIds.size() - 1; i++) {
-            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i));
-            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i + 1));
-            if (subtask.getStartTime().isBefore(nextSubtask.getStartTime())) {
-                this.startTime = subtask.getStartTime();
-            } else {
-                this.startTime = nextSubtask.getStartTime();
-            }
-        }
+        return super.getDuration();
     }
 
     public void setStartTimeDirectly(LocalDateTime startTime) {
-        this.startTime = startTime;
+        super.setStartTime(startTime);
     }
 
     @Override
     public LocalDateTime getStartTime() {
-        return startTime;
+       return super.getStartTime();
     }
 
     @Override
-    public LocalDateTime getEndTime() {
-        ArrayList<Integer> listOfSubtasksIds = this.getSubtasksId();
-        for (int i = 0; i < listOfSubtasksIds.size() - 1; i++) {
-            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i));
-            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds.get(i + 1));
-            if (subtask.getEndTime().isAfter(nextSubtask.getEndTime())) {
-                this.endTime = subtask.getEndTime();
-            } else {
-                this.endTime = nextSubtask.getEndTime();
-            }
-        }
-        return endTime;
+    public void setEndTimeDirectly(LocalDateTime endTime) {
+        super.setEndTimeDirectly(endTime);
     }
 
-    public void setEndTimeDirectly(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public LocalDateTime getEndTime() {
+        return super.getEndTimeDirectly();
     }
 }

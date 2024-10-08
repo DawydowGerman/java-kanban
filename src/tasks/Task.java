@@ -23,6 +23,11 @@ public class Task {
         this.description = description;
     }
 
+    public Task(int durationLength,int year, int month, int day, int hour, int minute) {
+        this.startTime = LocalDateTime.of(year, month, day, hour, minute);
+        this.duration = Duration.ofMinutes(durationLength);
+    }
+
     public String getName() {
         return name;
     }
@@ -50,6 +55,14 @@ public class Task {
     public LocalDateTime getEndTime() {
         endTime = startTime.plus(duration);
         return endTime;
+    }
+
+    public LocalDateTime getEndTimeDirectly() {
+        return endTime;
+    }
+
+    public void setEndTimeDirectly(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public void setName(String name) {

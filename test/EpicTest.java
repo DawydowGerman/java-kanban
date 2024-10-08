@@ -23,10 +23,8 @@ class EpicTest {
     void shouldEpicsBeEqualWhenSameId() {
         Epic epic0 = new Epic();
         epic0.setIdNum(1);
-
         Epic epic1 = new Epic();
         epic1.setIdNum(1);
-
         Assertions.assertEquals(epic0, epic1);
     }
 
@@ -43,8 +41,9 @@ class EpicTest {
 
     @Test
     void linkSubtaskToEpicAndGetSubtasksIdMethodsTest() {
-        Subtask subtask1 = new Subtask();
+        Subtask subtask1 = new Subtask(60,2023,02,15,07,11);
         subtask1.setIdNum(334);
+        subtask1.getEndTime();
         epic.linkSubtaskToEpic(subtask1);
         ArrayList<Integer> list = epic.getSubtasksId();
         Assertions.assertEquals(list.get(0), 334);
@@ -60,51 +59,47 @@ class EpicTest {
     }
 
     @Test
-    void getDurationAndSetDurationMethodsTest() {
-        Subtask subtask1 = new Subtask();
+    void setDurationStartTimeEndTimeTestForDuration() {
+        Subtask subtask1 = new Subtask(60,2022,02,15,07,11);
         subtask1.setIdNum(27);
-        Subtask subtask2 = new Subtask();
+        subtask1.getEndTime();
+        Subtask subtask2 = new Subtask(60,2023,02,15,07,11);
         subtask2.setIdNum(99);
-        subtask1.setDuration(60);
-        subtask2.setDuration(60);
+        subtask2.getEndTime();
         epic.linkSubtaskToEpic(subtask1);
         epic.linkSubtaskToEpic(subtask2);
-        epic.setDuration();
+        epic.setDurationStartTimeEndTime();
+        epic.getDuration();
         Assertions.assertEquals(epic.getDuration().toMinutes(), 120);
     }
 
     @Test
-    void setStartTimeMethodTest() {
-        Subtask subtask1 = new Subtask();
+    void setDurationStartTimeEndTimeTestForStartTime() {
+        Subtask subtask1 = new Subtask(60,2022,02,15,07,11);
         subtask1.setIdNum(23);
-        Subtask subtask2 = new Subtask();
+        Subtask subtask2 = new Subtask(60,2023,02,15,07,11);
         subtask2.setIdNum(56);
-        subtask1.setStartTime(2022,02,15,07,11);
-        subtask2.setStartTime(2022,02,15,06,11);
         epic.linkSubtaskToEpic(subtask1);
         epic.linkSubtaskToEpic(subtask2);
-        epic.setStartTime();
-        Assertions.assertEquals(epic.getStartTime(), subtask2.getStartTime());
+        epic.setDurationStartTimeEndTime();
+        Assertions.assertEquals(epic.getStartTime(), subtask1.getStartTime());
     }
 
     @Test
-    void getEndTimeMethodTest() {
+    void setDurationStartTimeEndTimeTestForEndTime() {
         Epic epic0 = new Epic();
         epic0.setIdNum(13);
-        Subtask subtask3 = new Subtask();
+        Subtask subtask3 = new Subtask(60,2022,02,15,07,11);
         subtask3.setIdNum(23);
-        Subtask subtask4 = new Subtask();
+        Subtask subtask4 = new Subtask(60,2023,02,15,07,11);
         subtask4.setIdNum(56);
-        subtask3.setStartTime(2022,02,15,02,11);
-        subtask4.setStartTime(2022,02,17,06,11);
-        subtask3.setDuration(60);
-        subtask4.setDuration(60);
         subtask3.getEndTime();
         subtask4.getEndTime();
         epic0.linkSubtaskToEpic(subtask3);
         epic0.linkSubtaskToEpic(subtask4);
+        epic0.setDurationStartTimeEndTime();
         LocalDateTime epicsEndTime = epic0.getEndTime();
-        LocalDateTime testTime = LocalDateTime.of(2022,02,17,07,11);
+        LocalDateTime testTime = subtask4.getEndTime();
         Assertions.assertEquals(epicsEndTime, testTime);
     }
 }
