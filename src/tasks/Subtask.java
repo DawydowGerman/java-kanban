@@ -10,6 +10,10 @@ public class Subtask extends Task {
         super(name, description);
     }
 
+    public Subtask(int durationLength,int year, int month, int day, int hour, int minute) {
+        super(durationLength, year, month, day, hour, minute);
+    }
+
     public int getEpicId() {
         return epicId;
     }

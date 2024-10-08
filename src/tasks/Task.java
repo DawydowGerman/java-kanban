@@ -1,6 +1,9 @@
 package main.kanban1.java.src.tasks;
 
 import main.kanban1.java.src.status.Status;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -8,6 +11,9 @@ public class Task {
     private String description;
     private int idNum;
     private Status status = Status.NEW;
+    private Duration duration;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     public Task() {
     }
@@ -15,6 +21,11 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Task(int durationLength,int year, int month, int day, int hour, int minute) {
+        this.startTime = LocalDateTime.of(year, month, day, hour, minute);
+        this.duration = Duration.ofMinutes(durationLength);
     }
 
     public String getName() {
@@ -33,6 +44,27 @@ public class Task {
         return status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        endTime = startTime.plus(duration);
+        return endTime;
+    }
+
+    public LocalDateTime getEndTimeDirectly() {
+        return endTime;
+    }
+
+    public void setEndTimeDirectly(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -47,6 +79,18 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setDuration(int durationLength) {
+        this.duration = Duration.ofMinutes(durationLength);
+    }
+
+    public void setStartTime(int year, int month, int day, int hour, int minute) {
+        this.startTime = LocalDateTime.of(year, month, day, hour, minute);
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     @Override
