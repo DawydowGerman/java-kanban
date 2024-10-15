@@ -28,10 +28,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public List<Task> getTasks() {
         List<Task> tasksList = new ArrayList<>();
-        for (Node node : mapHistory.values()) {
-            Task task = (Task) node.getTask();
-            tasksList.add(task);
-        }
+        mapHistory.values()
+            .forEach(i -> tasksList.add(i.getTask()));
         return tasksList;
     }
 
@@ -47,7 +45,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             node.next.prev = node.prev;
         }
-        Task task = (Task) node.getTask();
+        Task task = node.getTask();
         int taskId = task.getIdNum();
         mapHistory.remove(taskId);
     }
@@ -67,7 +65,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        List<Task> copyOfWatchHistory = getTasks();
-        return copyOfWatchHistory;
+        return getTasks();
     }
 }

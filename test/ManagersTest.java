@@ -18,6 +18,8 @@ class ManagersTest {
     @BeforeEach
     public void beforeEach() {
         task = new Task("task","to do something");
+        task.setStartTime(2024,3,21,12,34);
+        task.setDuration(60);
         managers = new Managers();
         taskManager = managers.getDefault();
         taskManager.addTaskObj(task);

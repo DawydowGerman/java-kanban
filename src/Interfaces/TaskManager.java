@@ -1,5 +1,6 @@
 package main.kanban1.java.src.Interfaces;
 
+import main.kanban1.java.src.exceptions.OvelapException;
 import main.kanban1.java.src.tasks.Epic;
 import main.kanban1.java.src.tasks.Subtask;
 import main.kanban1.java.src.tasks.Task;
@@ -26,7 +27,7 @@ public interface TaskManager {
 
     Epic getEpicById(Integer integer);
 
-    void addTaskObj(Task task);
+    void addTaskObj(Task task) throws OvelapException;
 
     void addSubtaskObj(Subtask subtask);
 
@@ -47,4 +48,21 @@ public interface TaskManager {
     ArrayList<Subtask> getAllSubtasksOfOneEpic(Epic epic);
 
     void updateEpicStatus(Epic epic);
+
+    ArrayList<Task> getPrioritizedTasks();
+
+    boolean checkIntersections(Task task0, Task task1);
+
+    void setAllSubtasksNEWTrue();
+
+    void someSubtasksNotNEW();
+
+    void setAllSubtasksDONETrue();
+
+    void someSubtasksNotDONE();
+
+    void save();
+
+
+
 }

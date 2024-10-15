@@ -5,6 +5,7 @@ import main.kanban1.java.src.tasks.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.time.LocalDateTime;
 
 class TaskTest {
     Task task;
@@ -47,6 +48,28 @@ class TaskTest {
     @Test
     void getStatusMethodTest() {
         Assertions.assertEquals(task.getStatus(), Status.NEW);
+    }
+
+    @Test
+    void getDurationMethodTest() {
+        task0.setDuration(30);
+        Assertions.assertEquals(task0.getDuration().toMinutes(), 30);
+    }
+
+    @Test
+    void getStartTimeMethodTest() {
+        task0.setStartTime(2022,02,12,01,34);
+        LocalDateTime testDateTime = LocalDateTime.of(2022,02,12,01,34);
+        Assertions.assertEquals(task0.getStartTime(), testDateTime);
+    }
+
+    @Test
+    void getEndTimeMethodTest() {
+        task1.setStartTime(2022,02,12,01,34);
+        task1.setDuration(30);
+        LocalDateTime task1EndTime = task1.getEndTime();
+        LocalDateTime testDateTime = LocalDateTime.of(2022,02,12,02,04);
+        Assertions.assertEquals(task1EndTime, testDateTime);
     }
 
     @Test
