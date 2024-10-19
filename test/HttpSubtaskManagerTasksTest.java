@@ -108,12 +108,9 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setStartTime(2024, 3, 15, 16, 32);
         subtask0.setDuration(60);
         subtask0.getEndTime();
-
         manager.addSubtaskObj(subtask0);
-
         Subtask subtask = manager.getSubtaskById(subtask0.getIdNum());
         String jsonFormattedTask = gson.toJson(subtask);
-
         URI url = URI.create("http://localhost:8080/subtasks/" + subtask0.getIdNum());
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -143,27 +140,28 @@ public class HttpSubtaskManagerTasksTest {
 
     @Test
     public void addSubtaskObjTest() throws IOException, InterruptedException {
-        String jsonFormattedTask = "{\n" +
-                "  \"epicId\": 0,\n" +
-                "  \"name\": \"subtask0\",\n" +
-                "  \"description\": \"to do something\",\n" +
-                "  \"idNum\": 0,\n" +
-                "  \"status\": \"NEW\",\n" +
-                "  \"duration\": \"PT1H\",\n" +
-                "  \"startTime\": \"2024-03-15T16:32:00\",\n" +
-                "  \"endTime\": \"2024-03-15T17:32:00\"\n" +
-                "}";
+        Subtask subtask0 = new Subtask("subtask0","to do something");
+        subtask0.setStartTime(2024, 3, 15, 16, 32);
+        subtask0.setDuration(60);
+        subtask0.getEndTime();
+
+        String jsonFormattedTask = gson.toJson(subtask0);
+
         URI url = URI.create("http://localhost:8080/subtasks");
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(jsonFormattedTask))
                 .uri(url)
                 .build();
+
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
-        Subtask subtask = manager.getSubtaskById(1);
+
+
+        Subtask subtask = manager.getSubtaskById(2);
         subtask.setIdNum(0);
         String taksFromManager = gson.toJson(subtask);
+
         Assertions.assertEquals(response.statusCode(), 201);
         Assertions.assertEquals(jsonFormattedTask, taksFromManager);
     }
