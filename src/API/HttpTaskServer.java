@@ -11,7 +11,7 @@ public class HttpTaskServer {
     private TaskManager taskManager;
     private HttpServer httpServer;
 
-    public HttpTaskServer (TaskManager taskManager) throws IOException {
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.taskManager = taskManager;
         this.httpServer = HttpServer.create();
         httpServer.bind(new InetSocketAddress(PORT), 0);
