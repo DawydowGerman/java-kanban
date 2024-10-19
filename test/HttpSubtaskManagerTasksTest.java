@@ -108,10 +108,13 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setStartTime(2024, 3, 15, 16, 32);
         subtask0.setDuration(60);
         subtask0.getEndTime();
+
         manager.addSubtaskObj(subtask0);
+
         Subtask subtask = manager.getSubtaskById(subtask0.getIdNum());
         String jsonFormattedTask = gson.toJson(subtask);
-        URI url = URI.create("http://localhost:8080/subtasks/1");
+
+        URI url = URI.create("http://localhost:8080/subtasks/" + subtask0.getIdNum());
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(url)
