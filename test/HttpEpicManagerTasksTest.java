@@ -94,9 +94,9 @@ public class HttpEpicManagerTasksTest {
     public void getEpicByIdTest() throws IOException, InterruptedException {
         Epic epic0 = new Epic("epic", "desc");
         manager.addEpicObj(epic0);
-        Epic epic = manager.getEpicById(12);
+        Epic epic = manager.getEpicById(epic0.getIdNum());
         String jsonFormattedEpic = gson.toJson(epic);
-        URI url = URI.create("http://localhost:8080/epics/12");
+        URI url = URI.create("http://localhost:8080/epics/" + epic0.getIdNum());
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(url)
@@ -143,7 +143,7 @@ public class HttpEpicManagerTasksTest {
         epic0.linkSubtaskToEpic(subtask1);
         List<Subtask> subsList = manager.getSubtasks();
         String jsonFormattedSubtask = gson.toJson(subsList);
-        URI url = URI.create("http://localhost:8080/epics/7/subtasks");
+        URI url = URI.create("http://localhost:8080/epics/" + epic0.getIdNum() + "/subtasks");
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(url)
@@ -190,6 +190,7 @@ public class HttpEpicManagerTasksTest {
     @Test
     public void addEpicObjTest() throws IOException, InterruptedException {
         Epic epic0 = new Epic("epic", "desc");
+        epic0.setIdNum(1);
         String serialized = gson.toJson(epic0);
         URI url = URI.create("http://localhost:8080/epics");
         HttpRequest request = HttpRequest.newBuilder()
@@ -199,8 +200,8 @@ public class HttpEpicManagerTasksTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
-        Epic epic = manager.getEpicById(1);
-        epic.setIdNum(0);
+        ArrayList<Epic> list = manager.getEpics();
+        Epic epic = manager.getEpicById(list.get(0).getIdNum());
         String taksFromManager = gson.toJson(epic);
         Assertions.assertEquals(response.statusCode(), 201);
         Assertions.assertEquals(serialized, taksFromManager);

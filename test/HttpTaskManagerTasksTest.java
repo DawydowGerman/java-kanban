@@ -256,7 +256,7 @@ public class HttpTaskManagerTasksTest {
         task0.setStartTime(2024, 3, 15, 16, 32);
         task0.setDuration(60);
         task0.getEndTime();
-        
+
         manager.addTaskObj(task0);
 
         URI url = URI.create("http://localhost:8080/tasks/" + task0.getIdNum());
