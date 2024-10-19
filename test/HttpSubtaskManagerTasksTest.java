@@ -109,7 +109,7 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setDuration(60);
         subtask0.getEndTime();
         manager.addSubtaskObj(subtask0);
-        Subtask subtask = manager.getSubtaskById(1);
+        Subtask subtask = manager.getSubtaskById(subtask0.getIdNum());
         String jsonFormattedTask = gson.toJson(subtask);
         URI url = URI.create("http://localhost:8080/subtasks/1");
         HttpRequest request = HttpRequest.newBuilder()
@@ -158,7 +158,7 @@ public class HttpSubtaskManagerTasksTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
-        Subtask subtask = manager.getSubtaskById(2);
+        Subtask subtask = manager.getSubtaskById(1);
         subtask.setIdNum(0);
         String taksFromManager = gson.toJson(subtask);
         Assertions.assertEquals(response.statusCode(), 201);
