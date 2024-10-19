@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -144,6 +145,7 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setStartTime(2024, 3, 15, 16, 32);
         subtask0.setDuration(60);
         subtask0.getEndTime();
+        subtask0.setIdNum(2);
 
         String jsonFormattedTask = gson.toJson(subtask0);
 
@@ -157,9 +159,9 @@ public class HttpSubtaskManagerTasksTest {
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
 
+        ArrayList<Subtask> list = manager.getSubtasks();
 
-        Subtask subtask = manager.getSubtaskById(2);
-        subtask.setIdNum(0);
+        Subtask subtask = manager.getSubtaskById( list.get(0).getIdNum());
         String taksFromManager = gson.toJson(subtask);
 
         Assertions.assertEquals(response.statusCode(), 201);
@@ -265,12 +267,16 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setStartTime(2024, 3, 15, 16, 32);
         subtask0.setDuration(60);
         subtask0.getEndTime();
+
         Epic epic = new Epic("epic", "desc");
+
         manager.addSubtaskObj(subtask0);
         manager.addEpicObj(epic);
+
         subtask0.setEpicId(epic.getIdNum());
         epic.linkSubtaskToEpic(subtask0);
-        URI url = URI.create("http://localhost:8080/subtasks/3");
+
+        URI url = URI.create("http://localhost:8080/subtasks/" + subtask0.getIdNum());
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
                 .uri(url)
@@ -278,6 +284,8 @@ public class HttpSubtaskManagerTasksTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
+
+
         Assertions.assertEquals(response.statusCode(), 200);
         Assertions.assertEquals(response.body(), "Подзадача удалена.");
     }
