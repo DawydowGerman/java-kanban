@@ -194,7 +194,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtaskById(Integer id) {
         Subtask subtask = subtasksList.get(id);
-        if (subtask == null) {return;}
+        if (subtask == null) {
+            return;
+        }
         int epicId = subtask.getEpicId();
         Epic epic = epicsList.get(epicId);
         epic.deleteSubtaskId(id); // here the problem
