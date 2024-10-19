@@ -190,11 +190,10 @@ public class HttpEpicManagerTasksTest {
     @Test
     public void addEpicObjTest() throws IOException, InterruptedException {
         Epic epic0 = new Epic("epic", "desc");
-        epic0.setIdNum(1);
-        String serialized = gson.toJson(epic0);
+        String serialized0 = gson.toJson(epic0);
         URI url = URI.create("http://localhost:8080/epics");
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(serialized))
+                .POST(HttpRequest.BodyPublishers.ofString(serialized0))
                 .uri(url)
                 .build();
         HttpClient client = HttpClient.newHttpClient();
@@ -202,9 +201,11 @@ public class HttpEpicManagerTasksTest {
         HttpResponse<String> response = client.send(request, handler);
         ArrayList<Epic> list = manager.getEpics();
         Epic epic = manager.getEpicById(list.get(0).getIdNum());
+        epic0.setIdNum(epic.getIdNum());
+        String serialized1 = gson.toJson(epic0);
         String taksFromManager = gson.toJson(epic);
         Assertions.assertEquals(response.statusCode(), 201);
-        Assertions.assertEquals(serialized, taksFromManager);
+        Assertions.assertEquals(serialized1, taksFromManager);
     }
 
     @Test
