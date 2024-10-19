@@ -102,10 +102,14 @@ public class HttpTaskManagerTasksTest {
         task0.setStartTime(2024, 3, 15, 16, 32);
         task0.setDuration(60);
         task0.getEndTime();
+
         manager.addTaskObj(task0);
-        Task task = manager.getTaskById(4);
+
+        Task task = manager.getTaskById(task0.getIdNum());
+
         String jsonFormattedTask = gson.toJson(task);
-        URI url = URI.create("http://localhost:8080/tasks/4");
+
+        URI url = URI.create("http://localhost:8080/tasks/" + task0.getIdNum());
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(url)
@@ -134,15 +138,13 @@ public class HttpTaskManagerTasksTest {
 
     @Test
     public void addTaskObjTest() throws IOException, InterruptedException {
-        String jsonFormattedTask = "{\n" +
-                "  \"name\": \"task0\",\n" +
-                "  \"description\": \"to do something\",\n" +
-                "  \"idNum\": 0,\n" +
-                "  \"status\": \"NEW\",\n" +
-                "  \"duration\": \"PT1H\",\n" +
-                "  \"startTime\": \"2024-03-15T16:32:00\",\n" +
-                "  \"endTime\": \"2024-03-15T17:32:00\"\n" +
-                "}";
+        Task task0 = new Task("task0","to do something");
+        task0.setStartTime(2024, 3, 15, 16, 32);
+        task0.setDuration(60);
+        task0.getEndTime();
+        task0.setIdNum(3);
+        String jsonFormattedTask = gson.toJson(task0);
+
         URI url = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(jsonFormattedTask))
@@ -151,8 +153,8 @@ public class HttpTaskManagerTasksTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
-        Task task = manager.getTaskById(3);
-        task.setIdNum(0);
+        ArrayList<Task> list = manager.getTasks();
+        Task task = manager.getTaskById(list.get(0).getIdNum());
         String taksFromManager = gson.toJson(task);
         Assertions.assertEquals(response.statusCode(), 201);
         Assertions.assertEquals(jsonFormattedTask, taksFromManager);
@@ -254,8 +256,10 @@ public class HttpTaskManagerTasksTest {
         task0.setStartTime(2024, 3, 15, 16, 32);
         task0.setDuration(60);
         task0.getEndTime();
+        
         manager.addTaskObj(task0);
-        URI url = URI.create("http://localhost:8080/tasks/5");
+
+        URI url = URI.create("http://localhost:8080/tasks/" + task0.getIdNum());
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
                 .uri(url)

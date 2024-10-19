@@ -17,7 +17,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -59,15 +58,12 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setStartTime(2024, 3, 15, 16, 32);
         subtask0.setDuration(60);
         subtask0.getEndTime();
-
         Subtask subtask1 = new Subtask("task0","to do something");
         subtask1.setStartTime(2022, 3, 15, 16, 32);
         subtask1.setDuration(60);
         subtask1.getEndTime();
-
         manager.addSubtaskObj(subtask0);
         manager.addSubtaskObj(subtask1);
-
         ArrayList<Subtask> subtasks = manager.getSubtasks();
         String jsonFormattedTasks = gson.toJson(subtasks);
         URI url = URI.create("http://localhost:8080/subtasks");
@@ -78,10 +74,8 @@ public class HttpSubtaskManagerTasksTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
-
         String responseBody = response.body();
         int responseStatus = response.statusCode();
-
         Assertions.assertEquals(responseStatus, 200);
         Assertions.assertEquals(jsonFormattedTasks, responseBody);
     }
@@ -146,22 +140,18 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setDuration(60);
         subtask0.getEndTime();
         subtask0.setIdNum(2);
-
         String jsonFormattedTask = gson.toJson(subtask0);
-
         URI url = URI.create("http://localhost:8080/subtasks");
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(jsonFormattedTask))
                 .uri(url)
                 .build();
-
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
 
         ArrayList<Subtask> list = manager.getSubtasks();
-
-        Subtask subtask = manager.getSubtaskById( list.get(0).getIdNum());
+        Subtask subtask = manager.getSubtaskById(list.get(0).getIdNum());
         String taksFromManager = gson.toJson(subtask);
 
         Assertions.assertEquals(response.statusCode(), 201);
@@ -267,15 +257,11 @@ public class HttpSubtaskManagerTasksTest {
         subtask0.setStartTime(2024, 3, 15, 16, 32);
         subtask0.setDuration(60);
         subtask0.getEndTime();
-
         Epic epic = new Epic("epic", "desc");
-
         manager.addSubtaskObj(subtask0);
         manager.addEpicObj(epic);
-
         subtask0.setEpicId(epic.getIdNum());
         epic.linkSubtaskToEpic(subtask0);
-
         URI url = URI.create("http://localhost:8080/subtasks/" + subtask0.getIdNum());
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
@@ -284,8 +270,6 @@ public class HttpSubtaskManagerTasksTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
-
-
         Assertions.assertEquals(response.statusCode(), 200);
         Assertions.assertEquals(response.body(), "Подзадача удалена.");
     }
