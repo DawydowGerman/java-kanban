@@ -1,5 +1,6 @@
 package main.kanban1.java.src.API;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 import main.kanban1.java.src.Interfaces.TaskManager;
 
@@ -11,15 +12,15 @@ public class HttpTaskServer {
     private TaskManager taskManager;
     private HttpServer httpServer;
 
-    public HttpTaskServer(TaskManager taskManager) throws IOException {
+    public HttpTaskServer(TaskManager taskManager, Gson gson) throws IOException {
         this.taskManager = taskManager;
         this.httpServer = HttpServer.create();
         httpServer.bind(new InetSocketAddress(PORT), 0);
-        httpServer.createContext("/tasks", new TasksHandler(taskManager));
-        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager));
-        httpServer.createContext("/epics", new EpicsHandler(taskManager));
-        httpServer.createContext("/history", new HistoryHandler(taskManager));
-        httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager));
+        httpServer.createContext("/tasks", new TasksHandler(taskManager, gson));
+        httpServer.createContext("/subtasks", new SubtasksHandler(taskManager, gson));
+        httpServer.createContext("/epics", new EpicsHandler(taskManager, gson));
+        httpServer.createContext("/history", new HistoryHandler(taskManager, gson));
+        httpServer.createContext("/prioritized", new PrioritizedHandler(taskManager, gson));
     }
 
     public void start() {

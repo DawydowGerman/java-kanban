@@ -1,10 +1,7 @@
 package main.kanban1.java.test;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import main.kanban1.java.src.API.DurationConverter;
 import main.kanban1.java.src.API.HttpTaskServer;
-import main.kanban1.java.src.API.LocalDateTimeConverter;
 import main.kanban1.java.src.Interfaces.HistoryManager;
 import main.kanban1.java.src.Interfaces.TaskManager;
 import main.kanban1.java.src.manager.InMemoryTaskManager;
@@ -20,20 +17,14 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class HttpPrioritizedManagerTest {
     Managers managers = new Managers();
     HistoryManager historyManager = managers.getDefaultHistory();
+    Gson gson = managers.getGson();
     TaskManager manager = new InMemoryTaskManager(historyManager);
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
-    Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(Duration.class, new DurationConverter())
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeConverter())
-            .create();
+    HttpTaskServer taskServer = new HttpTaskServer(manager, gson);
 
     public HttpPrioritizedManagerTest() throws IOException {
     }

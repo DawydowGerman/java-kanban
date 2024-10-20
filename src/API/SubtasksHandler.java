@@ -1,7 +1,6 @@
 package main.kanban1.java.src.API;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import main.kanban1.java.src.Interfaces.TaskManager;
@@ -13,115 +12,112 @@ import java.util.ArrayList;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
-public class SubtasksHandler implements HttpHandler {
-    private TaskManager taskManager;
-    private Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(Duration.class, new DurationConverter())
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeConverter())
-            .create();
+public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
 
-    public SubtasksHandler(TaskManager taskManager) {
-        this.taskManager = taskManager;
+    public SubtasksHandler(TaskManager taskManager, Gson gson) {
+        super(taskManager, gson);
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
-        String method = httpExchange.getRequestMethod();
-        String path = httpExchange.getRequestURI().getPath();
+    public TaskManager getTaskManager() {
+        return super.getTaskManager();
+    }
 
-        if (method.equals("GET")) {
-            long numOfSlashes = path.chars().filter(ch -> ch == '/').count();
-            if (numOfSlashes == 2) {
-                String idStr = path.split("/")[2];
-                int id = Integer.parseInt(idStr);
-                Subtask subtask = taskManager.getSubtaskById(id);
-                    if (subtask == null) {
-                        String response = "Такой подзадачи нет.";
-                        httpExchange.sendResponseHeaders(404, 0);
-                        try (OutputStream os = httpExchange.getResponseBody()) {
-                            os.write(response.getBytes());
-                        }
-                    }
-                String response = gson.toJson(subtask);
-                httpExchange.sendResponseHeaders(200, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
-            }
-            ArrayList<Subtask> subtasks = taskManager.getSubtasks();
-                if (subtasks.size() == 0) {
-                    String response = "Список подзадач пуст.";
-                    httpExchange.sendResponseHeaders(404, 0);
-                    try (OutputStream os = httpExchange.getResponseBody()) {
-                        os.write(response.getBytes());
-                    }
-                }
-            String response = gson.toJson(subtasks);
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
-        } else if (method.equals("POST")) {
-            InputStream inputStream = httpExchange.getRequestBody();
-            String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            Subtask subtask = gson.fromJson(body,Subtask.class);
-            try {
-                if (subtask.getIdNum() == 0) {
-                    taskManager.addSubtaskObj(subtask);
-                    String response = "Подзадача добавлена.";
-                    httpExchange.sendResponseHeaders(201, 0);
-                    try (OutputStream os = httpExchange.getResponseBody()) {
-                        os.write(response.getBytes());
-                    }
-                } else {
-                    taskManager.updSubtask(subtask);
-                    String response = "Подзадача обновлена.";
-                    httpExchange.sendResponseHeaders(201, 0);
-                    try (OutputStream os = httpExchange.getResponseBody()) {
-                        os.write(response.getBytes());
-                    }
-                }
-            } catch (OvelapException e) {
-                String response = "Добавляемая подзадача переcекается с другой.";
-                httpExchange.sendResponseHeaders(406, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
-            }
-        } else if (method.equals("DELETE")) {
-            if (path.length() <= 9) {
-                String response = "Не указан номер удаляемой подзадачи.";
-                httpExchange.sendResponseHeaders(500, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
-            }
-            int subtaskListSizeBefore = taskManager.getSubtasks().size();
+    @Override
+    public Gson getGson() {
+        return super.getGson();
+    }
+
+    @Override
+    protected void processGet(String path, HttpExchange httpExchange) throws IOException {
+        long numOfSlashes = path.chars().filter(ch -> ch == '/').count();
+        if (numOfSlashes == 2) {
             String idStr = path.split("/")[2];
             int id = Integer.parseInt(idStr);
-            taskManager.deleteSubtaskById(id);
-                if (subtaskListSizeBefore == taskManager.getSubtasks().size()) {
-                    String response = "Удаляемой подзадачи не существует.";
-                    httpExchange.sendResponseHeaders(404, 0);
-                    try (OutputStream os = httpExchange.getResponseBody()) {
-                        os.write(response.getBytes());
-                    }
+            Subtask subtask = getTaskManager().getSubtaskById(id);
+            if (subtask == null) {
+                String response = "Такой подзадачи нет.";
+                httpExchange.sendResponseHeaders(404, 0);
+                try (OutputStream os = httpExchange.getResponseBody()) {
+                    os.write(response.getBytes());
                 }
-            String response = "Подзадача удалена.";
+            }
+            String response = getGson().toJson(subtask);
             httpExchange.sendResponseHeaders(200, 0);
             try (OutputStream os = httpExchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
-        } else {
-            String response = "Некорректный метод!";
+        }
+        ArrayList<Subtask> subtasks = getTaskManager().getSubtasks();
+        if (subtasks.size() == 0) {
+            String response = "Список подзадач пуст.";
+            httpExchange.sendResponseHeaders(404, 0);
+            try (OutputStream os = httpExchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+        String response = getGson().toJson(subtasks);
+        httpExchange.sendResponseHeaders(200, 0);
+        try (OutputStream os = httpExchange.getResponseBody()) {
+            os.write(response.getBytes());
+        }
+    }
+
+    @Override
+    protected void processPost(String path, HttpExchange httpExchange) throws IOException {
+        InputStream inputStream = httpExchange.getRequestBody();
+        String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        Subtask subtask = getGson().fromJson(body,Subtask.class);
+        try {
+            if (subtask.getIdNum() == 0) {
+                getTaskManager().addSubtaskObj(subtask);
+                String response = "Подзадача добавлена.";
+                httpExchange.sendResponseHeaders(201, 0);
+                try (OutputStream os = httpExchange.getResponseBody()) {
+                    os.write(response.getBytes());
+                }
+            } else {
+                getTaskManager().updSubtask(subtask);
+                String response = "Подзадача обновлена.";
+                httpExchange.sendResponseHeaders(201, 0);
+                try (OutputStream os = httpExchange.getResponseBody()) {
+                    os.write(response.getBytes());
+                }
+            }
+        } catch (OvelapException e) {
+            String response = "Добавляемая подзадача переcекается с другой.";
+            httpExchange.sendResponseHeaders(406, 0);
+            try (OutputStream os = httpExchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+    }
+
+    @Override
+    protected void processDelete(String path, HttpExchange httpExchange) throws IOException {
+        if (path.length() <= 9) {
+            String response = "Не указан номер удаляемой подзадачи.";
             httpExchange.sendResponseHeaders(500, 0);
             try (OutputStream os = httpExchange.getResponseBody()) {
                 os.write(response.getBytes());
             }
+        }
+        int subtaskListSizeBefore = getTaskManager().getSubtasks().size();
+        String idStr = path.split("/")[2];
+        int id = Integer.parseInt(idStr);
+        getTaskManager().deleteSubtaskById(id);
+        if (subtaskListSizeBefore == getTaskManager().getSubtasks().size()) {
+            String response = "Удаляемой подзадачи не существует.";
+            httpExchange.sendResponseHeaders(404, 0);
+            try (OutputStream os = httpExchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+        String response = "Подзадача удалена.";
+        httpExchange.sendResponseHeaders(200, 0);
+        try (OutputStream os = httpExchange.getResponseBody()) {
+            os.write(response.getBytes());
         }
     }
 }
