@@ -30,7 +30,7 @@ public class BaseHttpHandler implements HttpHandler {
         String method = httpExchange.getRequestMethod();
         String path = httpExchange.getRequestURI().getPath();
 
-        switch(method) {
+        switch (method) {
             case "GET":
                 processGet(path, httpExchange);
                 break;
