@@ -63,6 +63,5 @@ public interface TaskManager {
 
     void save();
 
-
-
+    List<Task> getHistory();
 }

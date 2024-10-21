@@ -10,6 +10,7 @@ import main.kanban1.java.src.util.TasksComparator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -121,14 +122,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask.getStartTime() != null && subtask.getDuration() != null) {
             ArrayList<Subtask> subsList = this.getSubtasks();
             subsList.forEach(i -> {
-                        try {
-                            if (checkIntersections(subtask, i)) {
-                                throw new OvelapException("Добавляемая задача пересекается с другой");
-                            }
-                        } catch (OvelapException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    });
+                                if (checkIntersections(subtask, i)) {
+                                    throw new OvelapException("Добавляемая задача пересекается с другой");
+                                }
+                             });
             if (intersectionsValidator) {
                 return;
             }
@@ -151,13 +148,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (task.getStartTime() != null && task.getDuration() != null) {
             ArrayList<Task> taskList = this.getTasks();
             taskList.forEach(i -> {
-                        try {
-                            if (checkIntersections(task, i)) {
-                                throw new OvelapException("Добавляемая задача пересекается с другой");
-                            }
-                        } catch (OvelapException e) {
-                            System.out.println(e.getMessage());
-                        }
+                                if (checkIntersections(task, i)) {
+                                    throw new OvelapException("Добавляемая задача пересекается с другой");
+                                }
                     });
             if (intersectionsValidator) {
                 return;
@@ -172,13 +165,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask.getStartTime() != null && subtask.getDuration() != null) {
             ArrayList<Subtask> subsList = this.getSubtasks();
             subsList.forEach(i -> {
-                        try {
-                            if (checkIntersections(subtask, i)) {
-                                throw new OvelapException("Добавляемая задача пересекается с другой");
-                            }
-                        } catch (OvelapException e) {
-                            System.out.println(e.getMessage());
-                        }
+                                if (checkIntersections(subtask, i)) {
+                                    throw new OvelapException("Добавляемая задача пересекается с другой");
+                                }
                     });
             if (intersectionsValidator) {
                 return;
@@ -205,10 +194,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtaskById(Integer id) {
         Subtask subtask = subtasksList.get(id);
-        if (subtask == null) return;
+        if (subtask == null) {
+            return;
+        }
         int epicId = subtask.getEpicId();
         Epic epic = epicsList.get(epicId);
-        epic.deleteSubtaskId(id);
+        epic.deleteSubtaskId(id); // here the problem
         this.updateEpicStatus(epic);
         treeSet.remove(subtask);
         subtasksList.remove(id);
@@ -313,5 +304,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void save() {
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return inMemoryHistoryManagerObj.getHistory();
     }
 }
