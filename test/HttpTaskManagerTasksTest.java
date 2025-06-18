@@ -144,6 +144,7 @@ public class HttpTaskManagerTasksTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
         HttpResponse<String> response = client.send(request, handler);
+
         ArrayList<Task> list = manager.getTasks();
         Task task = manager.getTaskById(list.get(0).getIdNum());
         String taksFromManager = gson.toJson(task);
