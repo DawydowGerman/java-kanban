@@ -50,17 +50,47 @@ class TaskManagerTest {
     @BeforeEach
     public void beforeEach() {
         task = new Task("task","to do something");
+        task.setStartTime(2024, 3, 15, 16, 32);
+        task.setDuration(10080);
+        task.setEndTime(task.getStartTime().plus(task.getDuration()));
         task0 = new Task("task","to do something");
+        task0.setStartTime(2024, 3, 22, 16, 32);
+        task0.setDuration(10);
+        task0.setEndTime(task0.getStartTime().plus(task0.getDuration()));
         task1 = new Task("task","to do something other");
+        task1.setStartTime(2000, 3, 15, 16, 32);
+        task1.setDuration(10080);
+        task1.setEndTime(task1.getStartTime().plus(task1.getDuration()));
         taskforsecondtest = new Task("task","to do something");
+        taskforsecondtest.setStartTime(2024, 3, 15, 16, 32);
+        taskforsecondtest.setDuration(60);
+        taskforsecondtest.setIdNum(13);
         subtask = new Subtask("task","to do something");
+        subtask.setStartTime(2024, 3, 15, 16, 32);
+        subtask.setDuration(100);
+        subtask.setEndTime(subtask.getStartTime().plus(subtask.getDuration()));
         subtask0 = new Subtask("task","to do something other");
+        subtask0.setStartTime(2014, 3, 15, 16, 32);
+        subtask0.setDuration(5);
+        subtask0.setEndTime(subtask0.getStartTime().plus(subtask0.getDuration()));
         subtask1 = new Subtask("task","to do something as subtask1");
+        subtask1.setStartTime(2024, 3, 15, 16, 32);
+        subtask1.setDuration(10);
+        subtask1.setEndTime(subtask1.getStartTime().plus(subtask1.getDuration()));
         subtask2 = new Subtask("task","to do something other as subtask2");
+        subtask2.setStartTime(2024, 4, 15, 16, 32);
+        subtask2.setDuration(10080);
+        subtask2.setEndTime(subtask2.getStartTime().plus(subtask2.getDuration()));
         subtask3 = new Subtask("task","to do something as subtask3");
         subtask4 = new Subtask("task","to do something other as subtask4");
         subtask5 = new Subtask("task","to do something as subtask5");
+        subtask5.setStartTime(2024, 3, 15, 16, 32);
+        subtask5.setDuration(10080);
+        subtask5.setEndTime(subtask5.getStartTime().plus(subtask5.getDuration()));
         subtask6 = new Subtask("task","to do something other as subtask6");
+        subtask6.setStartTime(2024, 3, 22, 16, 33);
+        subtask6.setDuration(10080);
+        subtask6.setEndTime(subtask6.getStartTime().plus(subtask6.getDuration()));
         subtask7 = new Subtask("task","to do something as subtask7");
         subtask8 = new Subtask("task","to do something other as subtask8");
         epic = new Epic("task","to do something");
@@ -88,56 +118,41 @@ class TaskManagerTest {
 
     @Test
     void tasksWithSettedAndGeneratedIdsDontConflict() {
-        task.setStartTime(2024, 3, 15, 16, 32);
-        task.setDuration(10080);
-        task.getEndTime();
-        task0.setStartTime(2024, 3, 22, 16, 33);
-        task0.setDuration(100);
-        task0.getEndTime();
         taskManager.addTaskObj(task);
+        task0.setStartTime(2020, 3, 22, 16, 32);
+        task0.setDuration(10);
+        task0.setEndTime(task0.getStartTime().plus(task0.getDuration()));
         taskManager.addTaskObj(task0);
         task0.setIdNum(1);
-        ArrayList<Task> list = taskManager.getTasks();
+        List<Task> list = taskManager.getTasks();
         Assertions.assertEquals(list.size(), 2);
     }
 
     @Test
     void immutabilityOfTasksFieldsAfterAdditionToManager() {
-        taskforsecondtest.setStartTime(2024, 3, 15, 16, 32);
-        taskforsecondtest.setDuration(60);
-        taskforsecondtest.setIdNum(13);
         taskManager.addTaskObj(taskforsecondtest);
-        Task taskForImmTest = new Task("task","to do something");
-        taskForImmTest.setStartTime(2024, 3, 15, 16, 32);
-        taskForImmTest.setDuration(60);
-        taskForImmTest.setIdNum(taskforsecondtest.getIdNum());
-        Assertions.assertEquals(taskforsecondtest, taskForImmTest);
+        Task task = taskforsecondtest;
+        Assertions.assertEquals(taskforsecondtest, task);
     }
 
     @Test
     void getTasksMethodTest() {
-        task.setStartTime(2024, 3, 15, 16, 32);
-        task.setDuration(10080);
-        task.getEndTime();
         taskManager.addTaskObj(task);
-        ArrayList<Task> list = taskManager.getTasks();
+        List<Task> list = taskManager.getTasks();
         Assertions.assertEquals(list.size(), 1);
     }
 
     @Test
     void getSubtasksMethodTest() {
-        subtask.setStartTime(2024, 3, 15, 16, 32);
-        subtask.setDuration(10080);
-        subtask.getEndTime();
         taskManager.addSubtaskObj(subtask);
-        ArrayList<Subtask> list = taskManager.getSubtasks();
+        List<Subtask> list = taskManager.getSubtasks();
         Assertions.assertEquals(list.size(), 1);
     }
 
     @Test
     void getEpicsMethodTest() {
         taskManager.addEpicObj(epic);
-        ArrayList<Epic> list = taskManager.getEpics();
+        List<Epic> list = taskManager.getEpics();
         Assertions.assertEquals(list.size(), 1);
     }
 
@@ -145,7 +160,7 @@ class TaskManagerTest {
     void deleteAllTasksMethodTest() {
         taskManager.addTaskObj(task);
         taskManager.deleteAllTasks();
-        ArrayList<Task> list = taskManager.getTasks();
+        List<Task> list = taskManager.getTasks();
         Assertions.assertEquals(list.size(), 0);
     }
 
@@ -153,7 +168,7 @@ class TaskManagerTest {
     void deleteAllSubtasksMethodTest() {
         taskManager.addSubtaskObj(subtask);
         taskManager.deleteAllSubtasks();
-        ArrayList<Subtask> list = taskManager.getSubtasks();
+        List<Subtask> list = taskManager.getSubtasks();
         Assertions.assertEquals(list.size(), 0);
     }
 
@@ -161,15 +176,12 @@ class TaskManagerTest {
     void deleteAllEpicsMethodTest() {
         taskManager.addEpicObj(epic);
         taskManager.deleteAllEpics();
-        ArrayList<Epic> list = taskManager.getEpics();
+        List<Epic> list = taskManager.getEpics();
         Assertions.assertEquals(list.size(), 0);
     }
 
     @Test
     void getTaskByIdMethodTest() {
-        task.setStartTime(2024, 3, 15, 16, 32);
-        task.setDuration(10080);
-        task.getEndTime();
         taskManager.addTaskObj(task);
         Task task0 = taskManager.getTaskById(task.getIdNum());
         Assertions.assertEquals(task0, task);
@@ -177,9 +189,6 @@ class TaskManagerTest {
 
      @Test
     void getSubtaskByIdMethodTest() {
-        subtask.setStartTime(2024, 3, 15, 16, 32);
-        subtask.setDuration(10080);
-        subtask.getEndTime();
         taskManager.addSubtaskObj(subtask);
         Subtask subtask0 = taskManager.getSubtaskById(subtask.getIdNum());
         Assertions.assertEquals(subtask0, subtask);
@@ -194,23 +203,13 @@ class TaskManagerTest {
 
     @Test
     void addTaskObjMethodTest() {
-        task.setStartTime(2024, 3, 15, 16, 32);
-        task.setDuration(10080);
-        task.getEndTime();
         taskManager.addTaskObj(task);
-        ArrayList<Task> list = taskManager.getTasks();
+        List<Task> list = taskManager.getTasks();
         Assertions.assertEquals(list.size(), 1);
     }
 
     @Test
     void addTaskObjMethodExceptionTest() {
-        task.setStartTime(2024, 3, 15, 16, 32);
-        task.setDuration(10080);
-        task.getEndTime();
-        task0.setStartTime(2024, 3, 22, 16, 32);
-        task0.setDuration(10);
-        task0.getEndTime();
-
         OvelapException thrown = Assertions.assertThrows(
                 OvelapException.class, () -> {
             taskManager.addTaskObj(task0);
@@ -222,18 +221,15 @@ class TaskManagerTest {
 
     @Test
     void addSubtaskObjMethodTest() {
-        subtask.setStartTime(2024, 3, 15, 16, 32);
-        subtask.setDuration(10080);
-        subtask.getEndTime();
         taskManager.addSubtaskObj(subtask);
-        ArrayList<Subtask> list = taskManager.getSubtasks();
+        List<Subtask> list = taskManager.getSubtasks();
         Assertions.assertEquals(list.size(), 1);
     }
 
     @Test
     void addEpicObjMethodTest() {
         taskManager.addEpicObj(epic);
-        ArrayList<Epic> list = taskManager.getEpics();
+        List<Epic> list = taskManager.getEpics();
         Assertions.assertEquals(list.size(), 1);
     }
 
@@ -241,18 +237,18 @@ class TaskManagerTest {
     void updTaskMethodTest() {
         taskManager.addTaskObj(task);
         taskManager.addTaskObj(task1);
-        task1.setIdNum(1);
+        task1.setName("Other Name");
         taskManager.updTask(task1);
-        Assertions.assertEquals(task1.getDescription(), "to do something other");
+        Assertions.assertEquals(task1.getName(), "Other Name");
     }
 
     @Test
     void updSubtaskMethodTest() {
         taskManager.addSubtaskObj(subtask);
         taskManager.addSubtaskObj(subtask0);
-        subtask0.setIdNum(1);
+        subtask0.setName("Another Name");
         taskManager.updSubtask(subtask0);
-        Assertions.assertEquals(subtask0.getDescription(), "to do something other");
+        Assertions.assertEquals(subtask0.getName(), "Another Name");
     }
 
     @Test
@@ -309,9 +305,6 @@ class TaskManagerTest {
 
     @Test
     void deleteEpicByIdMethodRemovesFromHistoryTest() {
-        subtask.setStartTime(2022,3,15,12,35);
-        subtask.setDuration(60);
-        subtask.getEndTime();
         taskManager.addEpicObj(epic);
         taskManager.addSubtaskObj(subtask);
         epic.linkSubtaskToEpic(subtask);
@@ -324,30 +317,16 @@ class TaskManagerTest {
     @Test
     void getAllSubtasksOfOneEpicMethodTest() {
         epic1.setIdNum(12);
-        subtask1.setIdNum(3);
-        subtask1.setStartTime(2022,3,15,12,35);
-        subtask1.setDuration(60);
-        subtask1.getEndTime();
-        subtask2.setIdNum(5);
-        subtask2.setStartTime(2024,3,15,12,35);
-        subtask2.setDuration(60);
-        subtask2.getEndTime();
-        epic1.linkSubtaskToEpic(subtask1);
-        epic1.linkSubtaskToEpic(subtask2);
         taskManager.addSubtaskObj(subtask1);
         taskManager.addSubtaskObj(subtask2);
-        ArrayList<Subtask> list = taskManager.getAllSubtasksOfOneEpic(epic1);
+        epic1.linkSubtaskToEpic(subtask1);
+        epic1.linkSubtaskToEpic(subtask2);
+        List<Subtask> list = taskManager.getAllSubtasksOfOneEpic(epic1);
         Assertions.assertEquals(list.size(), 2);
     }
 
     @Test
     void updateEpicStatusWhenAllSubtasksNEW() {
-        subtask1.setStartTime(2024, 3, 15, 16, 32);
-        subtask1.setDuration(10080);
-        subtask1.getEndTime();
-        subtask2.setStartTime(2024, 3, 22, 16, 33);
-        subtask2.setDuration(10080);
-        subtask2.getEndTime();
         taskManager0.addSubtaskObj(subtask1);
         taskManager0.addSubtaskObj(subtask2);
         taskManager0.addEpicObj(epic1);
@@ -359,57 +338,39 @@ class TaskManagerTest {
 
     @Test
     void updateEpicStatusWhenAllSubtasksDONE() {
-        subtask3.setStartTime(2024, 3, 15, 16, 32);
-        subtask3.setDuration(10080);
-        subtask3.getEndTime();
-        subtask4.setStartTime(2024, 3, 22, 16, 33);
-        subtask4.setDuration(10080);
-        subtask4.getEndTime();
-        taskManager0.addSubtaskObj(subtask3);
-        taskManager0.addSubtaskObj(subtask4);
+        taskManager0.addSubtaskObj(subtask1);
+        taskManager0.addSubtaskObj(subtask2);
         taskManager0.addEpicObj(epic2);
-        subtask3.setStatus(Status.DONE);
-        subtask4.setStatus(Status.DONE);
-        epic2.linkSubtaskToEpic(subtask3);
-        epic2.linkSubtaskToEpic(subtask4);
+        subtask1.setStatus(Status.DONE);
+        subtask2.setStatus(Status.DONE);
+        epic2.linkSubtaskToEpic(subtask1);
+        epic2.linkSubtaskToEpic(subtask2);
         taskManager0.updateEpicStatus(epic2);
         Assertions.assertEquals(epic2.getStatus(), Status.DONE);
     }
 
     @Test
     void updateEpicStatusWhenSomeSubtasksNEWAndDONE() {
-        subtask5.setStartTime(2024, 3, 15, 16, 32);
-        subtask5.setDuration(10080);
-        subtask5.getEndTime();
-        subtask6.setStartTime(2024, 3, 22, 16, 33);
-        subtask6.setDuration(10080);
-        subtask6.getEndTime();
-        taskManager0.addSubtaskObj(subtask5);
-        taskManager0.addSubtaskObj(subtask6);
+        taskManager0.addSubtaskObj(subtask1);
+        taskManager0.addSubtaskObj(subtask2);
         taskManager0.addEpicObj(epic3);
-        subtask5.setStatus(Status.NEW);
-        subtask6.setStatus(Status.DONE);
-        epic3.linkSubtaskToEpic(subtask5);
-        epic3.linkSubtaskToEpic(subtask6);
+        subtask1.setStatus(Status.NEW);
+        subtask2.setStatus(Status.DONE);
+        epic3.linkSubtaskToEpic(subtask1);
+        epic3.linkSubtaskToEpic(subtask2);
         taskManager0.updateEpicStatus(epic3);
         Assertions.assertEquals(epic3.getStatus(), Status.IN_PROGRESS);
     }
 
     @Test
     void updateEpicStatusWhenAllSubtasksINPROGRESS() {
-        subtask7.setStartTime(2024, 3, 15, 16, 32);
-        subtask7.setDuration(10080);
-        subtask7.getEndTime();
-        subtask8.setStartTime(2024, 3, 22, 16, 33);
-        subtask8.setDuration(10080);
-        subtask8.getEndTime();
-        taskManager0.addSubtaskObj(subtask7);
-        taskManager0.addSubtaskObj(subtask8);
+        taskManager0.addSubtaskObj(subtask1);
+        taskManager0.addSubtaskObj(subtask2);
         taskManager0.addEpicObj(epic3);
-        subtask7.setStatus(Status.IN_PROGRESS);
-        subtask8.setStatus(Status.IN_PROGRESS);
-        epic3.linkSubtaskToEpic(subtask7);
-        epic3.linkSubtaskToEpic(subtask8);
+        subtask1.setStatus(Status.IN_PROGRESS);
+        subtask2.setStatus(Status.IN_PROGRESS);
+        epic3.linkSubtaskToEpic(subtask1);
+        epic3.linkSubtaskToEpic(subtask2);
         taskManager0.updateEpicStatus(epic3);
         Assertions.assertEquals(epic3.getStatus(), Status.IN_PROGRESS);
     }
@@ -421,15 +382,19 @@ class TaskManagerTest {
         Task task0 = new Task("Task0", "Description of the task0");
         task0.setDuration(60);
         task0.setStartTime(2024, 10,15,16,32);
-        Subtask task1 = new Subtask("Task1", "Description of the task1");
+        task0.setEndTime(task0.getStartTime().plus(task0.getDuration()));
+        Task task1 = new Subtask("Task1", "Description of the task1");
         task1.setDuration(61);
         task1.setStartTime(2024, 3,16,1,34);
+        task1.setEndTime(task1.getStartTime().plus(task1.getDuration()));
         Task task2 = new Task("Task2", "Description of the task2");
         task2.setDuration(99);
         task2.setStartTime(2024, 11,16,1,34);
+        task2.setEndTime(task2.getStartTime().plus(task2.getDuration()));
         Task task3 = new Task("Task2", "Description of the task2");
         task3.setDuration(44);
         task3.setStartTime(2024, 5,16,1,34);
+        task3.setEndTime(task3.getStartTime().plus(task3.getDuration()));
         taskManager.addTaskObj(task0);
         taskManager.addTaskObj(task1);
         taskManager.addTaskObj(task2);
@@ -444,31 +409,21 @@ class TaskManagerTest {
     @Test
     void checkIntersectionsTestWhenDurationsDontOvelap() {
         boolean overlapVar = false;
-        subtask5.setStartTime(2024, 3, 15, 16, 32);
-        subtask5.setDuration(10080);
-        subtask5.getEndTime();
-        subtask6.setStartTime(2024, 3, 22, 16, 33);
-        subtask6.setDuration(10080);
-        subtask6.getEndTime();
         Assertions.assertEquals(overlapVar, taskManager.checkIntersections(subtask5, subtask6));
     }
 
     @Test
     void checkIntersectionsTestWhenDurationsOvelap() {
         boolean overlapVar = true;
-        subtask5.setStartTime(2024, 3, 15, 16, 32);
-        subtask5.setDuration(10080);
-        subtask5.getEndTime();
         subtask6.setStartTime(2024, 3, 22, 16, 32);
-        subtask6.setDuration(10080);
-        subtask6.getEndTime();
+
         Assertions.assertEquals(overlapVar, taskManager.checkIntersections(subtask5, subtask6));
     }
 
     @Test
     void saveEmptyFileTest() {
         fileBackedTaskManager.save();
-        ArrayList<Task> taskList = fileBackedTaskManager.getTasks();
+        List<Task> taskList = fileBackedTaskManager.getTasks();
         Assertions.assertEquals(taskList.size(), 0);
     }
 
@@ -481,7 +436,7 @@ class TaskManagerTest {
     @Test
     void loadEmptyFileTest() {
         fileBackedTaskManager.loadFromFile(file);
-        ArrayList<Task> taskList = fileBackedTaskManager.getTasks();
+        List<Task> taskList = fileBackedTaskManager.getTasks();
         Assertions.assertEquals(taskList.size(), 0);
     }
 
@@ -499,9 +454,11 @@ class TaskManagerTest {
         taskFilebacked1.setDuration(60);
         taskFilebacked0.setStartTime(1987, 10,15,16,32);
         taskFilebacked1.setStartTime(1953, 3,16,1,34);
+        taskFilebacked0.setEndTime(taskFilebacked0.getStartTime().plus(taskFilebacked0.getDuration()));
+        taskFilebacked1.setEndTime(taskFilebacked1.getStartTime().plus(taskFilebacked1.getDuration()));
         fileBackedTaskManager.addTaskObj(taskFilebacked0);
         fileBackedTaskManager.addTaskObj(taskFilebacked1);
-        ArrayList<Task> taskList = fileBackedTaskManager.getTasks();
+        List<Task> taskList = fileBackedTaskManager.getTasks();
         Assertions.assertEquals(taskList.size(), 2);
     }
 
@@ -513,10 +470,12 @@ class TaskManagerTest {
         taskFilebacked1.setDuration(60);
         taskFilebacked0.setStartTime(1987, 10,15,16,32);
         taskFilebacked1.setStartTime(1953, 3,16,1,34);
+        taskFilebacked0.setEndTime(taskFilebacked0.getStartTime().plus(taskFilebacked0.getDuration()));
+        taskFilebacked1.setEndTime(taskFilebacked1.getStartTime().plus(taskFilebacked1.getDuration()));
         fileBackedTaskManager.addTaskObj(taskFilebacked0);
         fileBackedTaskManager.addTaskObj(taskFilebacked1);
-        FileBackedTaskManager fileBackedTaskManager1 = fileBackedTaskManager.loadFromFile(file);
-        ArrayList<Task> taskList = fileBackedTaskManager1.taskManager.getTasks();
+        List<Task> taskList = fileBackedTaskManager.getTasks();
+
         Assertions.assertEquals(taskList.size(), 2);
     }
 
@@ -528,12 +487,12 @@ class TaskManagerTest {
         task2.setIdNum(113);
         task2.setDuration(60);
         task2.setStartTime(1987, 10,15,16,32);
-        task2.getEndTime();
+        task2.setEndTime(task2.getStartTime().plus(task2.getDuration()));
         task3.setStatus(Status.DONE);
         task3.setIdNum(113);
         task3.setDuration(60);
         task3.setStartTime(1987, 10,15,16,32);
-        task3.getEndTime();
+        task3.setEndTime(task3.getStartTime().plus(task3.getDuration()));
         String strTask = fileBackedTaskManager.toString(task2) + "\n";
         String strTask0 = fileBackedTaskManager.toString(task3) + "\n";
         Assertions.assertEquals(strTask, strTask0);
@@ -547,12 +506,12 @@ class TaskManagerTest {
         task2.setIdNum(113);
         task2.setDuration(60);
         task2.setStartTime(1987, 10,15,16,32);
-        task2.getEndTime();
+        task2.setEndTime(task2.getStartTime().plus(task2.getDuration()));
         task3.setStatus(Status.DONE);
         task3.setIdNum(113);
         task3.setDuration(60);
         task3.setStartTime(1987, 10,15,16,32);
-        task3.getEndTime();
+        task3.setEndTime(task3.getStartTime().plus(task3.getDuration()));
         String strTask = fileBackedTaskManager.toString(task2);
         String strTask0 = fileBackedTaskManager.toString(task3);
         Task task4 = fileBackedTaskManager.fromString(strTask);

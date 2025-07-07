@@ -16,18 +16,17 @@ class TaskTest {
     @BeforeEach
     public void beforeEach() {
         task = new Task("task","to do something");
+        task.setIdNum(0);
         task0 = new Task("task","to do something other");
         task1 = new Task("task","to do something");
+        task1.setIdNum(0);
         task2 = new Task("task","to do something");
+        task2.setIdNum(0);
     }
 
     @Test
     void shouldTasksBeEqualWhenSameId() {
-        Task task0 = new Task();
-        task0.setIdNum(1);
-        Task task1 = new Task();
-        task1.setIdNum(1);
-        Assertions.assertEquals(task0, task1);
+        Assertions.assertEquals(task, task2);
     }
 
     @Test
@@ -67,6 +66,7 @@ class TaskTest {
     void getEndTimeMethodTest() {
         task1.setStartTime(2022,02,12,01,34);
         task1.setDuration(30);
+        task1.setEndTime(task1.getStartTime().plus(task1.getDuration()));
         LocalDateTime task1EndTime = task1.getEndTime();
         LocalDateTime testDateTime = LocalDateTime.of(2022,02,12,02,04);
         Assertions.assertEquals(task1EndTime, testDateTime);

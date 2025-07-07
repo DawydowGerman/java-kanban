@@ -29,33 +29,25 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     protected void processGet(String path, HttpExchange httpExchange) throws IOException {
         List<Task> tasksHistory = getTaskManager().getHistory();
         if (tasksHistory.size() == 0) {
-            String response = "Список истории пуст.";
-            httpExchange.sendResponseHeaders(404, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 404, "Список истории пуст.");
+            return;
         }
-        String response = getGson().toJson(tasksHistory);
-        httpExchange.sendResponseHeaders(200, 0);
-        try (OutputStream os = httpExchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+        sendResponse(httpExchange, 200, getGson().toJson(tasksHistory));
     }
 
     @Override
     protected void processPost(String path, HttpExchange httpExchange) throws IOException {
-        String response = "Некорректный метод!";
-        httpExchange.sendResponseHeaders(500, 0);
-        try (OutputStream os = httpExchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+        sendResponse(httpExchange, 500, "Некорректный метод!");
     }
 
     @Override
     protected void processDelete(String path, HttpExchange httpExchange) throws IOException {
-        String response = "Некорректный метод!";
-        httpExchange.sendResponseHeaders(500, 0);
-        try (OutputStream os = httpExchange.getResponseBody()) {
+        sendResponse(httpExchange, 500, "Некорректный метод!");
+    }
+
+    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+        exchange.sendResponseHeaders(statusCode, 0);
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
     }

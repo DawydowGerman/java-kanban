@@ -1,7 +1,7 @@
 package ru.practicum.kanban.tasks;
 
 public class Subtask extends Task {
-    private int epicId;
+    private Integer epicId;
 
     public Subtask() {
     }
@@ -14,12 +14,12 @@ public class Subtask extends Task {
         super(durationLength, year, month, day, hour, minute);
     }
 
-    public int getEpicId() {
+    public Integer getEpicId() {
         return epicId;
     }
 
-    public void setEpicId(int epicId) {
-        if (this.getIdNum() == epicId) return;
+    public void setEpicId(Integer epicId) {
+        if (this.getIdNum().equals(epicId)) return;
         this.epicId = epicId;
     }
 }

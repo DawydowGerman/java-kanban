@@ -1,7 +1,6 @@
 package ru.practicum.kanban.tasks;
 
 import ru.practicum.kanban.status.Status;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,7 +8,7 @@ import java.util.Objects;
 public class Task {
     private String name;
     private String description;
-    private int idNum;
+    private Integer idNum;
     private Status status = Status.NEW;
     private Duration duration;
     private LocalDateTime startTime;
@@ -23,9 +22,10 @@ public class Task {
         this.description = description;
     }
 
-    public Task(int durationLength,int year, int month, int day, int hour, int minute) {
+    public Task(int durationLength, int year, int month, int day, int hour, int minute) {
         this.startTime = LocalDateTime.of(year, month, day, hour, minute);
         this.duration = Duration.ofMinutes(durationLength);
+        setEndTime(startTime.plus(duration));
     }
 
     public String getName() {
@@ -36,7 +36,7 @@ public class Task {
         return description;
     }
 
-    public int getIdNum() {
+    public Integer getIdNum() {
         return idNum;
     }
 
@@ -53,16 +53,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        endTime = startTime.plus(duration);
         return endTime;
-    }
-
-    public LocalDateTime getEndTimeDirectly() {
-        return endTime;
-    }
-
-    public void setEndTimeDirectly(LocalDateTime endTime) {
-        this.endTime = endTime;
     }
 
     public void setName(String name) {
@@ -93,13 +84,17 @@ public class Task {
         this.startTime = startTime;
     }
 
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         Task task = (Task) obj;
-        return idNum == task.idNum &&
+        return idNum.equals(task.idNum) &&
                 Objects.equals(name, task.name) &&
                 Objects.equals(description, task.description) &&
                 (status == task.status);

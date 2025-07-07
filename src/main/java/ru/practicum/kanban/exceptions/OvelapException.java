@@ -14,5 +14,5 @@ public class OvelapException extends RuntimeException {
 
     public OvelapException(final Throwable cause) {
         super(cause);
-  }
+    }
 }

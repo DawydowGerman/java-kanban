@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface TaskManager {
 
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
-    ArrayList<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
     void deleteAllTasks();
 
@@ -45,21 +45,13 @@ public interface TaskManager {
 
     void deleteEpicById(Integer id);
 
-    ArrayList<Subtask> getAllSubtasksOfOneEpic(Epic epic);
+    List<Subtask> getAllSubtasksOfOneEpic(Epic epic);
 
     void updateEpicStatus(Epic epic);
 
     ArrayList<Task> getPrioritizedTasks();
 
     boolean checkIntersections(Task task0, Task task1);
-
-    void setAllSubtasksNEWTrue();
-
-    void someSubtasksNotNEW();
-
-    void setAllSubtasksDONETrue();
-
-    void someSubtasksNotDONE();
 
     void save();
 

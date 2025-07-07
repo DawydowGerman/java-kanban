@@ -40,8 +40,10 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void tasksAddedToWatchHistoryKeepFieldsImmutable() {
+        task.setIdNum(1);
         historyManager.add(task);
-        Assertions.assertEquals(task, task0);
+        Assertions.assertEquals(task.getName(), task0.getName());
+        Assertions.assertEquals(task.getDescription(), task0.getDescription());
     }
 
     @Test
@@ -88,6 +90,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void getHistoryMethodsTest() {
+        task.setIdNum(24);
         historyManager.add(task);
         List<Task> list = historyManager.getHistory();
         Assertions.assertEquals(list.size(), 1);

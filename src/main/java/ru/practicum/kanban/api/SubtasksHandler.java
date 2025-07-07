@@ -7,10 +7,10 @@ import ru.practicum.kanban.interfaces.TaskManager;
 import ru.practicum.kanban.tasks.Subtask;
 import ru.practicum.kanban.exceptions.OvelapException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
 
@@ -36,31 +36,17 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
             int id = Integer.parseInt(idStr);
             Subtask subtask = getTaskManager().getSubtaskById(id);
             if (subtask == null) {
-                String response = "Такой подзадачи нет.";
-                httpExchange.sendResponseHeaders(404, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
+                sendResponse(httpExchange, 404, "Такой подзадачи нет.");
+                return;
             }
-            String response = getGson().toJson(subtask);
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 200, getGson().toJson(subtask));
         }
-        ArrayList<Subtask> subtasks = getTaskManager().getSubtasks();
+        List<Subtask> subtasks = getTaskManager().getSubtasks();
         if (subtasks.size() == 0) {
-            String response = "Список подзадач пуст.";
-            httpExchange.sendResponseHeaders(404, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 404, "Список подзадач пуст.");
+            return;
         }
-        String response = getGson().toJson(subtasks);
-        httpExchange.sendResponseHeaders(200, 0);
-        try (OutputStream os = httpExchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+        sendResponse(httpExchange, 200, getGson().toJson(subtasks));
     }
 
     @Override
@@ -69,53 +55,36 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
         String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         Subtask subtask = getGson().fromJson(body,Subtask.class);
         try {
-            if (subtask.getIdNum() == 0) {
+            if (subtask.getIdNum() == null) {
                 getTaskManager().addSubtaskObj(subtask);
-                String response = "Подзадача добавлена.";
-                httpExchange.sendResponseHeaders(201, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
+                sendResponse(httpExchange, 201, "Подзадача добавлена.");
             } else {
                 getTaskManager().updSubtask(subtask);
-                String response = "Подзадача обновлена.";
-                httpExchange.sendResponseHeaders(201, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
+                sendResponse(httpExchange, 201, "Подзадача обновлена.");
             }
         } catch (OvelapException e) {
-            String response = "Добавляемая подзадача переcекается с другой.";
-            httpExchange.sendResponseHeaders(406, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 406, "Добавляемая подзадача переcекается с другой.");
         }
     }
 
     @Override
     protected void processDelete(String path, HttpExchange httpExchange) throws IOException {
         if (path.length() <= 9) {
-            String response = "Не указан номер удаляемой подзадачи.";
-            httpExchange.sendResponseHeaders(500, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 500, "Не указан номер удаляемой подзадачи.");
         }
         int subtaskListSizeBefore = getTaskManager().getSubtasks().size();
         String idStr = path.split("/")[2];
         int id = Integer.parseInt(idStr);
         getTaskManager().deleteSubtaskById(id);
         if (subtaskListSizeBefore == getTaskManager().getSubtasks().size()) {
-            String response = "Удаляемой подзадачи не существует.";
-            httpExchange.sendResponseHeaders(404, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 404, "Удаляемой подзадачи не существует.");
         }
-        String response = "Подзадача удалена.";
-        httpExchange.sendResponseHeaders(200, 0);
-        try (OutputStream os = httpExchange.getResponseBody()) {
+        sendResponse(httpExchange, 200, "Подзадача удалена.");
+    }
+
+    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+        exchange.sendResponseHeaders(statusCode, 0);
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
     }

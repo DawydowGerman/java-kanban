@@ -22,8 +22,8 @@ public class InMemoryHistoryManager implements HistoryManager {
             tail = node;
             mapHistory.put(task.getIdNum(), node);
         } else {
-            tail.next = node;
-            node.prev = tail;
+            tail.setNext(node);
+            node.setPrev(tail);
             tail = node;
             mapHistory.put(task.getIdNum(), node);
         }
@@ -39,14 +39,14 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void removeNode(Node node) {
         if (node == null) return;
         if (node == head) {
-            head = node.next;
+            head = node.getNext();
         } else {
-            node.prev.next = node.next;
+            node.getPrev().setNext(node.getNext());
         }
         if (node == tail) {
-            tail = node.prev;
+            tail = node.getPrev();
         } else {
-            node.next.prev = node.prev;
+            node.getNext().setPrev(node.getPrev());
         }
         Task task = node.getTask();
         int taskId = task.getIdNum();

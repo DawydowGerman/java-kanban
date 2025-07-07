@@ -2,13 +2,11 @@ package ru.practicum.kanban.tasks;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Epic extends Task {
-    private HashMap<Integer, Subtask> subtasksListOfThisEpic = new HashMap<>();
+    private Map<Integer, Subtask> subtasksMap = new HashMap<>();
 
     public Epic() {
     }
@@ -22,61 +20,50 @@ public class Epic extends Task {
     }
 
     public void linkSubtaskToEpic(Subtask subtask) {
-        if (subtask == null) return;
-        if (this.getIdNum() == subtask.getIdNum()) return;
-        subtasksListOfThisEpic.put(subtask.getIdNum(), subtask);
+        if (subtask == null || subtask.getIdNum() == null) return;
+        if (this.getIdNum().equals(subtask.getIdNum())) return;
+        subtasksMap.put(subtask.getIdNum(), subtask);
         setDurationStartTimeEndTime();
     }
 
-    public ArrayList<Integer> getSubtasksId() {
-        ArrayList<Integer> listOfSubtasksIds = new ArrayList<>(subtasksListOfThisEpic.keySet());
+    public List<Integer> getSubtasksId() {
+        List<Integer> listOfSubtasksIds = new ArrayList<>(subtasksMap.keySet());
         return listOfSubtasksIds;
     }
 
-    public void deleteSubtaskId(Integer subtaskId) {
-        subtasksListOfThisEpic.remove(subtaskId);
+    public void deleteSubtaskById(Integer subtaskId) {
+        subtasksMap.remove(subtaskId);
         setDurationStartTimeEndTime();
     }
 
     public void cleanSubtaskIds() {
-        subtasksListOfThisEpic.clear();
+        subtasksMap.clear();
         setDurationStartTimeEndTime();
     }
 
     public void setDurationStartTimeEndTime() {
-        List<Subtask> subsList = new ArrayList<Subtask>(subtasksListOfThisEpic.values());
+        List<Subtask> subsList = new ArrayList<Subtask>(subtasksMap.values());
         List<Duration> subsDurList = subsList.stream().map(Subtask::getDuration).collect(Collectors.toList());
         Duration duration = subsDurList.stream().reduce(Duration.ZERO, (t, d) -> t = t.plus(d));
-        super.setDuration((int) duration.toMinutes());
+        setDuration((int) duration.toMinutes());
 
-        ArrayList<Integer> listOfSubtasksIds0 = this.getSubtasksId();
-        LocalDateTime startTime = null;
-        for (int i = 0; i < listOfSubtasksIds0.size() - 1; i++) {
-            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds0.get(i));
-            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds0.get(i + 1));
-            if (subtask.getStartTime().isBefore(nextSubtask.getStartTime())) {
-                startTime = subtask.getStartTime();
-            } else {
-                startTime = nextSubtask.getStartTime();
-            }
-        }
-        setStartTimeDirectly(startTime);
+        LocalDateTime startTime = subsList.stream()
+                .map(Subtask::getStartTime)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+        setStartTime(startTime);
 
-        ArrayList<Integer> listOfSubtasksIds1 = this.getSubtasksId();
-        LocalDateTime endTime = null;
-        for (int i = 0; i < listOfSubtasksIds1.size() - 1; i++) {
-            Subtask subtask = subtasksListOfThisEpic.get(listOfSubtasksIds1.get(i));
-            Subtask nextSubtask = subtasksListOfThisEpic.get(listOfSubtasksIds1.get(i + 1));
-            if (subtask.getEndTime().isAfter(nextSubtask.getEndTime())) {
-                endTime = subtask.getEndTime();
-            } else {
-                endTime = nextSubtask.getEndTime();
-            }
-        }
-        setEndTimeDirectly(endTime);
+        LocalDateTime endTime = subsList.stream()
+                .map(Subtask::getEndTime)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
+        setEndTime(endTime);
     }
 
-    public void setDurationDirectly(int durationLength) {
+    @Override
+    public void setDuration(int durationLength) {
         super.setDuration(durationLength);
     }
 
@@ -85,7 +72,8 @@ public class Epic extends Task {
         return super.getDuration();
     }
 
-    public void setStartTimeDirectly(LocalDateTime startTime) {
+    @Override
+    public void setStartTime(LocalDateTime startTime) {
         super.setStartTime(startTime);
     }
 
@@ -95,11 +83,12 @@ public class Epic extends Task {
     }
 
     @Override
-    public void setEndTimeDirectly(LocalDateTime endTime) {
-        super.setEndTimeDirectly(endTime);
+    public void setEndTime(LocalDateTime endTime) {
+        super.setEndTime(endTime);
     }
 
+    @Override
     public LocalDateTime getEndTime() {
-        return super.getEndTimeDirectly();
+        return super.getEndTime();
     }
 }

@@ -19,11 +19,15 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class HttpPrioritizedManagerTest {
-    Managers managers = new Managers();
-    HistoryManager historyManager = managers.getDefaultHistory();
-    Gson gson = managers.getGson();
-    TaskManager manager = new InMemoryTaskManager(historyManager);
-    HttpTaskServer taskServer = new HttpTaskServer(manager, gson);
+    private static final String SERVER_URL = "http://localhost:8080";
+    private static final String PRIORITIZED_ENDPOINT = SERVER_URL + "/prioritized";
+
+    private final Managers managers = new Managers();
+    private final HistoryManager historyManager = managers.getDefaultHistory();
+    private final Gson gson = managers.getGson();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final TaskManager manager = new InMemoryTaskManager(historyManager);
+    private final HttpTaskServer taskServer = new HttpTaskServer(manager, gson);
 
     public HttpPrioritizedManagerTest() throws IOException {
     }
@@ -43,60 +47,63 @@ public class HttpPrioritizedManagerTest {
 
     @Test
     public void getHistoryWhenHistoryEmptyTest() throws IOException, InterruptedException {
-        URI url = URI.create("http://localhost:8080/prioritized");
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .build();
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> response = client.send(request, handler);
+        HttpRequest request = createGetRequest(PRIORITIZED_ENDPOINT);
+        HttpResponse<String> response = sendRequest(request);
+
         Assertions.assertEquals(response.statusCode(), 404);
         Assertions.assertEquals(response.body(), "Список истории пуст.");
     }
 
     @Test
     public void getPrioritizedTasksTest() throws IOException, InterruptedException {
-        Task task0 = new Task("task0","to do something");
-        task0.setStartTime(2024, 3, 15, 16, 32);
-        task0.setDuration(60);
-        task0.getEndTime();
-        Task task1 = new Task("task0","to do something");
-        task1.setStartTime(2022, 3, 15, 16, 32);
-        task1.setDuration(60);
-        task1.getEndTime();
-        manager.addTaskObj(task0);
+        Task task0 = createTestTask("task0", "to do something", 2024, 3, 15, 16, 32, 60);
+        Task task1 = createTestTask("task1", "to do something else", 2022, 3, 15, 16, 32, 60);
+
         manager.addTaskObj(task1);
-        manager.getTaskById(task0.getIdNum());
+        manager.addTaskObj(task0);
         manager.getTaskById(task1.getIdNum());
-        List<Task> tasksList0 = manager.getPrioritizedTasks();
-        String tasksListStr0 = gson.toJson(tasksList0);
-        List<Task> tasksList1 = manager.getPrioritizedTasks();
-        String tasksListStr1 = gson.toJson(tasksList1);
-        URI url = URI.create("http://localhost:8080/prioritized");
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(url)
-                .build();
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> response = client.send(request, handler);
+        manager.getTaskById(task0.getIdNum());
+
+        List<Task> expectedHistory = manager.getHistory();
+        String expectedJson = gson.toJson(expectedHistory);
+
+        HttpRequest request = createGetRequest(PRIORITIZED_ENDPOINT);
+        HttpResponse<String> response = sendRequest(request);
+
         Assertions.assertEquals(response.statusCode(), 200);
-        Assertions.assertEquals(tasksListStr0, tasksListStr1);
+        Assertions.assertEquals(expectedJson, response.body());
     }
 
     @Test
     public void wrongMethodTest() throws IOException, InterruptedException {
-        URI url = URI.create("http://localhost:8080/prioritized");
-        String data = "";
         HttpRequest request = HttpRequest.newBuilder()
-                .PUT(HttpRequest.BodyPublishers.ofString(data))
-                .uri(url)
+                .PUT(HttpRequest.BodyPublishers.ofString(""))
+                .uri(URI.create(PRIORITIZED_ENDPOINT))
                 .build();
-        HttpClient client = HttpClient.newHttpClient();
-        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-        HttpResponse<String> response = client.send(request, handler);
+        HttpResponse<String> response = sendRequest(request);
+
         Assertions.assertEquals(response.statusCode(), 500);
         Assertions.assertEquals(response.body(), "Некорректный метод!");
+    }
+
+    private HttpRequest createGetRequest(String url) {
+        return HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(url))
+                .build();
+    }
+
+    private HttpResponse<String> sendRequest(HttpRequest request) throws IOException, InterruptedException {
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private Task createTestTask(String name, String description,
+                                int year, int month, int day,
+                                int hour, int minute, int duration) {
+        Task task = new Task(name, description);
+        task.setStartTime(year, month, day, hour, minute);
+        task.setDuration(duration);
+        task.setEndTime(task.getStartTime().plus(task.getDuration()));
+        return task;
     }
 }

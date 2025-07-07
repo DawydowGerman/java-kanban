@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.List;
 
 public class TasksHandler extends BaseHttpHandler implements HttpHandler {
 
@@ -36,31 +36,16 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
             int id = Integer.parseInt(idStr);
             Task task = getTaskManager().getTaskById(id);
             if (task == null) {
-                String response = "Такой задачи нет.";
-                httpExchange.sendResponseHeaders(404, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
+                sendResponse(httpExchange, 404, "Такой задачи нет.");
+                return;
             }
-            String response = getGson().toJson(task);
-            httpExchange.sendResponseHeaders(200, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 200, getGson().toJson(task));
         }
-        ArrayList<Task> tasks = getTaskManager().getTasks();
+        List<Task> tasks = getTaskManager().getTasks();
         if (tasks.size() == 0) {
-            String response = "Список задач пуст.";
-            httpExchange.sendResponseHeaders(404, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 404, "Список задач пуст.");
         }
-        String response = getGson().toJson(tasks);
-        httpExchange.sendResponseHeaders(200, 0);
-        try (OutputStream os = httpExchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+        sendResponse(httpExchange, 200, getGson().toJson(tasks));
     }
 
     @Override
@@ -71,51 +56,34 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
         try {
             if (task.getIdNum() == 0) {
                 getTaskManager().addTaskObj(task);
-                String response = "Задача добавлена.";
-                httpExchange.sendResponseHeaders(201, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
+                sendResponse(httpExchange, 201, "Задача добавлена.");
             } else {
                 getTaskManager().updTask(task);
-                String response = "Задача обновлена.";
-                httpExchange.sendResponseHeaders(201, 0);
-                try (OutputStream os = httpExchange.getResponseBody()) {
-                    os.write(response.getBytes());
-                }
+                sendResponse(httpExchange, 201, "Задача обновлена.");
             }
         } catch (OvelapException e) {
-            String response = "Добавляемая задача переcекается с другой.";
-            httpExchange.sendResponseHeaders(406, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 406, "Добавляемая задача переcекается с другой.");
         }
     }
 
     @Override
     protected void processDelete(String path, HttpExchange httpExchange) throws IOException {
         if (path.length() <= 6) {
-            String response = "Не указан номер удаляемой задачи.";
-            httpExchange.sendResponseHeaders(500, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 500, "Не указан номер удаляемой задачи.");
         }
         int taskListSizeBefore = getTaskManager().getTasks().size();
         String idStr = path.split("/")[2];
         int id = Integer.parseInt(idStr);
         getTaskManager().deleteTaskById(id);
         if (taskListSizeBefore == getTaskManager().getTasks().size()) {
-            String response = "Удаляемой задачи не существует.";
-            httpExchange.sendResponseHeaders(404, 0);
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            sendResponse(httpExchange, 404, "Удаляемой задачи не существует.");
         }
-        String response = "Задача удалена.";
-        httpExchange.sendResponseHeaders(200, 0);
-        try (OutputStream os = httpExchange.getResponseBody()) {
+        sendResponse(httpExchange, 200, "Задача удалена.");
+    }
+
+    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+        exchange.sendResponseHeaders(statusCode, 0);
+        try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
         }
     }
